@@ -4,23 +4,7 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import polaroidImage from './polaroid.png';
 import {
-  LoginContainer,
-  LoginHeader,
-  Subtitle,
-  FormControl,
-  FormControl2,
-  EmailInput,
-  PasswordInput,
-  RememberMeLabel,
-  ForgotPasswordLink,
-  LoginButton,
-  CreateAccountButton,
-  Image,
-  ImageContainer,
-  RightContainer,
-  Container,
-  Column,
-  Row
+  LoginContainer, LoginHeader, Subtitle, FormControl, FormControl2, EmailInput, PasswordInput, RememberMeLabel, ForgotPasswordLink, LoginButton, CreateAccountButton, Image, ImageContainer, RightContainer, Container, Column, Row
 } from './LoginStyle.js';
 
 const LoginScreen = () => {

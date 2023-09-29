@@ -13,7 +13,15 @@ export const SidebarContainer = styled.div`
 `;
 
 export const Image = styled.img`
-  width: 70%;
+  width: 80%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 5%;
+  margin-top: 20px;
+`;
+
+export const ImageIcons = styled.img`
+  width: 140%;
   max-height: 200px;
   object-fit: cover;
   border-radius: 5%;
@@ -112,6 +120,14 @@ export const IconButton = styled.div`
     &:hover {
         background-color: #e0e0e0; /* Altere a cor do fundo no hover conforme desejado */
     }
+`;
+
+export const StyledButton = styled.button`
+  font-size: 18px;
+  border: none;
+  background: none;
+  text-decoration: none;
+  cursor: pointer;
 `;
 
 export const PinIcon = styled(BsFillPinAngleFill)`

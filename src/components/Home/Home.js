@@ -1,11 +1,13 @@
 import React from 'react';
 import Swal from 'sweetalert2';
-import { SidebarContainer, Button, Image, FloatingButton, BackgroundImage, PriorityContainer, ButtonsContainer, IconButton, ButtonRow, PinIcon } from './HomeStyle';
-import polaroidImage from './polaroid.png';
+import { SidebarContainer, Button, Image, ImageIcons, StyledButton, FloatingButton, BackgroundImage, PriorityContainer, ButtonsContainer, IconButton, ButtonRow, PinIcon } from './HomeStyle';
 import { useNavigate } from 'react-router-dom';
-import { BsFillShareFill } from 'react-icons/bs';
-import { FaShare, FaUserCircle } from 'react-icons/fa';
-import { IoIosExit } from 'react-icons/io';
+
+import polaroidImage from './polaroid.png';
+import share1 from './share.png'
+import share2 from './share2.png'
+import exit from './exitIcon.png'
+import avatar from './avatar.png'
 
 
 
@@ -46,28 +48,41 @@ const HomeScreen = () => {
             <Image src={imageSrc} alt="Imagem" />
             <Button>Organizar</Button>
             <PriorityContainer>
-                <PinIcon color="#e2172f" />  Prioridade 1
+                <PinIcon color="#e2172f" style={{ fontSize: "35px" }} />
+                <StyledButton>Prioridade 1</StyledButton>
             </PriorityContainer>
             <PriorityContainer>
-                <PinIcon color="#0e14b5" />  Prioridade 2
+                <PinIcon color="#0e14b5" style={{ fontSize: "35px" }} />
+                <StyledButton>Prioridade 2</StyledButton>
             </PriorityContainer>
             <PriorityContainer>
-                <PinIcon color="#ccc91c" />  Prioridade 3
+                <PinIcon color="#ccc91c" style={{ fontSize: "35px" }} />
+                <StyledButton>Prioridade 3</StyledButton>
             </PriorityContainer>
             <PriorityContainer>
-                <PinIcon color="#a737c2" />  Prioridade 4
+                <PinIcon color="#a737c2" style={{ fontSize: "35px" }} />
+                <StyledButton>Prioridade 4</StyledButton>
             </PriorityContainer>
             <PriorityContainer>
-                <PinIcon color="#23944a" />  Prioridade 5
+                <PinIcon color="#23944a" style={{ fontSize: "35px" }} />
+                <StyledButton>Prioridade 5</StyledButton>
             </PriorityContainer>
             <ButtonsContainer style={{ marginTop: 'auto' }}>
                 <ButtonRow>
-                    <IconButton><FaShare style={{ fontSize: '35px', color: '#971c9b' }} /></IconButton>
-                    <IconButton><BsFillShareFill style={{ fontSize: '35px', color: '#15623f' }} /></IconButton>
+                    <IconButton>
+                        <ImageIcons src={share1} alt="share" />
+                    </IconButton>
+                    <IconButton>
+                        <ImageIcons src={share2} alt="share" />
+                    </IconButton>
                 </ButtonRow>
                 <ButtonRow>
-                    <IconButton><FaUserCircle style={{ fontSize: '35px', color: '#d25518' }} /></IconButton>
-                    <IconButton onClick={handleExitClick}><IoIosExit style={{ fontSize: '42px', color: '#173d79' }} /></IconButton>
+                    <IconButton>
+                        <ImageIcons src={avatar} alt="avatar" />
+                    </IconButton>
+                    <IconButton>
+                        <ImageIcons src={exit} onClick={handleExitClick} alt="exit" style={{ width: "50px" }} />
+                    </IconButton>
                 </ButtonRow>
             </ButtonsContainer>
             <FloatingButton onClick={openModal}>+</FloatingButton>

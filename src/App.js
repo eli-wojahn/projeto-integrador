@@ -1,13 +1,12 @@
 import React from 'react';
-import Login from './components/Login/Login.js'
+import AppRouter from './components/Login/routes.js';
 
 function App() {
   return (
     <div className="App">
-      <Login />
+      <AppRouter/>
     </div>
   );
 }
 
 export default App;
-  
