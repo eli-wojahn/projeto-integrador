@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const LoginContainer = styled.div`
   padding: 80px;
-  padding-top: 200px;
+  padding-top: 100px;
   align-items: center;
   height: 100vh;
 `;
@@ -131,3 +131,6 @@ export const Column = ({ children, size }) => {
     const columnClass = `col-md-${size || 6}`;
     return <div className={columnClass}>{children}</div>;
 };
+
+
+

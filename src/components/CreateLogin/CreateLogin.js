@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import polaroidImage from '../Login/polaroid.png';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';  
 import {
   LoginContainer,
   LoginHeader,
@@ -28,6 +29,7 @@ const CreateAccountScreen = () => {
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [dataNasc, setDataNasc] = useState('');
   const [cpf, setCPF] = useState('');
 
   const formatCPF = (cpf) => {
@@ -60,6 +62,10 @@ const CreateAccountScreen = () => {
     setFullName(event.target.value);
   };
 
+  const handleDataNascChange = (event) => {
+    setDataNasc(event.target.value);
+  };
+
   const handleCPFChange = (event) => {
     const cleanedCPF = event.target.value.replace(/\D/g, '');
     const truncatedCPF = cleanedCPF.slice(0, 11);
@@ -67,20 +73,40 @@ const CreateAccountScreen = () => {
     setCPF(formattedCPF);
   };
 
-  const handleCreateAccountClick = () => {
-    if (!email || !password || !repeatPassword || !fullName || !cpf) {
+  const handleCreateAccountClick = async () => {
+    if (!email || !password || !repeatPassword || !dataNasc || !fullName || !cpf) {
       Swal.fire('Erro', 'Preencha todos os campos.', 'error');
       return;
     }
 
-    setEmail('');
-    setPassword('');
-    setRepeatPassword('');
-    setFullName('');
-    setCPF('');
+    const userData = {
+      nome: fullName,
+      cpf,
+      dataNasc,
+      email,
+      senha: password
+    };
 
-    Swal.fire('Sucesso', 'Conta criada com sucesso', 'success');
-    navigate('/');
+    try {
+      const response = await axios.post('http://localhost:3001/usuarios', userData);
+      console.log('Usuário cadastrado:', response.data);
+      Swal.fire('Sucesso', 'Conta criada com sucesso', 'success');
+      navigate('/');
+    } catch (error) {
+      console.error('Erro ao cadastrar usuário:', error);
+      console.log(error);
+      Swal.fire('Erro', 'Houve um erro ao criar a conta. Por favor, tente novamente.', 'error');
+    }
+
+    // setEmail('');
+    // setPassword('');
+    // setRepeatPassword('');
+    // setFullName('');
+    // setCPF('');
+    // setDataNasc('');
+
+    // Swal.fire('Sucesso', 'Conta criada com sucesso', 'success');
+    // navigate('/');
   };
 
   return (
@@ -106,6 +132,15 @@ const CreateAccountScreen = () => {
                 value={cpf}
                 onChange={handleCPFChange}
                 maxLength={14} // Limita o número máximo de caracteres a 14 (com pontos e traço)
+              />
+            </FormControl>
+            <FormControl>
+              <GenericInput
+                type="date"
+                placeholder="Data de Nascimento"
+                value={dataNasc}
+                onChange={handleDataNascChange}
+                maxLength={10} // Limita o número máximo de caracteres a 10 (com pontos e traço)
               />
             </FormControl>
             <FormControl>

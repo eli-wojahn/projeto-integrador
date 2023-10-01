@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import polaroidImage from './polaroid.png';
@@ -12,6 +13,8 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
+
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -20,30 +23,35 @@ const LoginScreen = () => {
     setPassword(event.target.value);
   };
 
-  const handleLoginClick = () => {
-    validateUser();
-  };
-
-  const validateUser = () => {
-    const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{5,}$/;
-
+  const handleLoginClick = async () => {
+    // Validar o e-mail antes de fazer a requisição
+    const emailPattern = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$/;
+  
     if (!email.match(emailPattern)) {
       console.error('Invalid email');
       Swal.fire('Erro', 'Digite um e-mail válido', 'error');
       return;
     }
-
-    if (!password.match(passwordPattern)) {
-      console.error('Invalid password');
-      Swal.fire('Erro', 'Sua senha deve conter no mínimo 5 caracteres incluindo UMA letra maiúscula, UMA letra minúscula e UM número. Não pode ter caracteres especiais', 'error');
-      return;
+  
+    try {
+      const userData = {
+        email,
+        senha: password,
+      };
+  
+      const response = await axios.post('http://localhost:3001/login', userData);
+  
+      if (response.status === 200 && response.data.msg === 'Usuário logado') {
+        Swal.fire('Sucesso', 'Login realizado com sucesso', 'success');
+        navigate('/home');
+      } else {
+        Swal.fire('Erro', 'Houve um erro ao realizar o login. Por favor, tente novamente.', 'error');
+      }
+    } catch (error) {
+      console.error('Erro ao realizar o login:', error);
+      Swal.fire('Erro', 'Houve um erro ao realizar o login. Por favor, tente novamente.', 'error');
     }
-
-    setEmail('');
-    setPassword('');
-    Swal.fire('Sucesso', 'Login realizado com sucesso', 'success');
-  };
+  };  
 
   return (
     <Container>
@@ -51,10 +59,10 @@ const LoginScreen = () => {
         <Column size={6}>
           <LoginContainer>
             <LoginHeader>
-              Seus presentes de um jeito fácil lorem ipsum lorem ipsum
+              Seus presentes de um jeito fácil!
             </LoginHeader>
             <Subtitle>
-              Bem-vindo ao Iwanna, faça seu login para desfrutar de lorem ipsum lorem ipsum
+              Bem-vindo ao iWanna!, faça seu login para personalizar a sua experiência.
             </Subtitle>
             <FormControl>
               <EmailInput
@@ -80,9 +88,7 @@ const LoginScreen = () => {
               <ForgotPasswordLink>Esqueceu a senha?</ForgotPasswordLink>
             </FormControl>
             <FormControl2>
-              <Link to="/home">
-                <LoginButton onClick={handleLoginClick}>Login</LoginButton>
-              </Link>
+              <LoginButton onClick={handleLoginClick}>Login</LoginButton>
               <Link to="/create-account">
                 <CreateAccountButton>Criar conta</CreateAccountButton>
               </Link>
