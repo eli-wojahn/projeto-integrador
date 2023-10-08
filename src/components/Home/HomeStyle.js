@@ -20,6 +20,14 @@ export const Image = styled.img`
   margin-top: 20px;
 `;
 
+export const ImagePins = styled.img`
+  width: 20%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 5%;
+
+`;
+
 export const ImageIcons = styled.img`
   width: 140%;
   max-height: 200px;

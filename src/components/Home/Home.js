@@ -1,6 +1,7 @@
 import React from 'react';
 import Swal from 'sweetalert2';
-import { SidebarContainer, Button, Image, ImageIcons, StyledButton, FloatingButton, BackgroundImage, PriorityContainer, ButtonsContainer, IconButton, ButtonRow, PinIcon } from './HomeStyle';
+import { SidebarContainer, Button, Image, ImageIcons, StyledButton, FloatingButton, BackgroundImage, 
+    PriorityContainer, ButtonsContainer, IconButton, ButtonRow, ImagePins } from './HomeStyle';
 import { useNavigate } from 'react-router-dom';
 
 import polaroidImage from './polaroid.png';
@@ -8,6 +9,11 @@ import share1 from './share.png'
 import share2 from './share2.png'
 import exit from './exitIcon.png'
 import avatar from './avatar.png'
+import pin_red from './pin_red.png'
+import pin_blue from './pin_blue.png'
+import pin_green from './pin_green.png'
+import pin_yellow from './pin_yellow.png'
+import pin_purple from './pin_purple.png'
 
 
 
@@ -48,23 +54,23 @@ const HomeScreen = () => {
             <Image src={imageSrc} alt="Imagem" />
             <Button>Organizar</Button>
             <PriorityContainer>
-                <PinIcon color="#e2172f" style={{ fontSize: "35px" }} />
+                <ImagePins src={pin_red} alt="Imagem" />
                 <StyledButton>Prioridade 1</StyledButton>
             </PriorityContainer>
             <PriorityContainer>
-                <PinIcon color="#0e14b5" style={{ fontSize: "35px" }} />
+                <ImagePins src={pin_blue} alt="Imagem" />
                 <StyledButton>Prioridade 2</StyledButton>
             </PriorityContainer>
             <PriorityContainer>
-                <PinIcon color="#ccc91c" style={{ fontSize: "35px" }} />
+                <ImagePins src={pin_green} alt="Imagem" />
                 <StyledButton>Prioridade 3</StyledButton>
             </PriorityContainer>
             <PriorityContainer>
-                <PinIcon color="#a737c2" style={{ fontSize: "35px" }} />
+                <ImagePins src={pin_purple} alt="Imagem" />
                 <StyledButton>Prioridade 4</StyledButton>
             </PriorityContainer>
             <PriorityContainer>
-                <PinIcon color="#23944a" style={{ fontSize: "35px" }} />
+                <ImagePins src={pin_yellow} alt="Imagem" />
                 <StyledButton>Prioridade 5</StyledButton>
             </PriorityContainer>
             <ButtonsContainer style={{ marginTop: 'auto' }}>
