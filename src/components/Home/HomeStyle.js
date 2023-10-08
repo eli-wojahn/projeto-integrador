@@ -130,12 +130,18 @@ export const IconButton = styled.div`
     }
 `;
 
-export const StyledButton = styled.button`
+export const StyledButton = styled.div`
   font-size: 18px;
-  border: none;
-  background: none;
-  text-decoration: none;
+  border: 1px  #ccc;
+  border-radius: 8px;
+  padding: 0.2em;
+  min-width: 100px; /* Defina um tamanho mínimo para evitar que o conteúdo desapareça */
   cursor: pointer;
+  display: inline-block;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `;
 
 export const PinIcon = styled(BsFillPinAngleFill)`
@@ -143,3 +149,5 @@ export const PinIcon = styled(BsFillPinAngleFill)`
     font-size: 24px;
     vertical-align: middle;
 `;
+
+
