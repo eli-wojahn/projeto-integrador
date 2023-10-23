@@ -1,47 +1,49 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import {
-  SidebarContainer, Button, Image, ImageIcons, StyledButton, FloatingButton,
+  SidebarContainer, Button, Image, ImageIcons, FloatingButton,
   BackgroundImage, PriorityContainer, ButtonsContainer, IconButton, ButtonRow, ImagePins
 } from './HomeStyle';
 import { useNavigate } from 'react-router-dom';
 
 import polaroidImage from './polaroid.png';
-import share1 from './share.png'
-import share2 from './share2.png'
-import exit from './exitIcon.png'
-import avatar from './avatar.png'
-import pin_red from './pin_red.png'
-import pin_blue from './pin_blue.png'
-import pin_green from './pin_green.png'
-import pin_yellow from './pin_yellow.png'
-import pin_purple from './pin_purple.png'
+import share1 from './share.png';
+import share2 from './share2.png';
+import exit from './exitIcon.png';
+import avatar from './avatar.png';
+import pin_red from './pin_red.png';
+import pin_blue from './pin_blue.png';
+import pin_green from './pin_green.png';
+import pin_yellow from './pin_yellow.png';
+import pin_purple from './pin_purple.png';
 
-const EditableButton = ({ initialValue }) => {
-  const [isEditing, setIsEditing] = useState(false);
+const EditableForm = ({ initialValue }) => {
   const [text, setText] = useState(initialValue);
-
-  const handleClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleBlur = () => {
-    setIsEditing(false);
-  };
 
   const handleChange = (e) => {
     setText(e.target.value);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
-    <StyledButton
-      contentEditable={isEditing}
-      onClick={handleClick}
-      onBlur={handleBlur}
-      onInput={handleChange}
-    >
-      {text}
-    </StyledButton>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={text}
+        onChange={handleChange}
+        style={{
+          backgroundColor: '#f0f0f0',
+          border: 'none',
+          outline: 'none',
+          width: '100%',
+          fontSize: '16px',
+          padding: '5px',
+        }}
+      />
+    </form>
   );
 };
 
@@ -57,8 +59,9 @@ const HomeScreen = () => {
     Swal.fire({
       title: 'Adicione seu desejo',
       html:
-        '<input id="swal-input1" class="swal2-input" placeholder="Name">' +
-        '<input id="swal-input2" class="swal2-input" placeholder="Image URL">' +
+        '<input id="swal-input1" class="swal2-input" placeholder="Nome">' +
+        '<input id="swal-input2" class="swal2-input" placeholder="Descrição">' +
+        '<input id="swal-input2" class="swal2-input" placeholder="Status">' +
         '<input id="swal-input3" class="swal2-input" placeholder="URL">',
       focusConfirm: false,
       preConfirm: () => {
@@ -82,23 +85,23 @@ const HomeScreen = () => {
       <Button>Organizar</Button>
       <PriorityContainer>
         <ImagePins src={pin_red} alt="Imagem" />
-        <EditableButton initialValue="Prioridade 1" />
+        <EditableForm initialValue="Prioridade 1" />
       </PriorityContainer>
       <PriorityContainer>
         <ImagePins src={pin_blue} alt="Imagem" />
-        <EditableButton initialValue="Prioridade 2" />
+        <EditableForm initialValue="Prioridade 2" />
       </PriorityContainer>
       <PriorityContainer>
         <ImagePins src={pin_green} alt="Imagem" />
-        <EditableButton initialValue="Prioridade 3" />
+        <EditableForm initialValue="Prioridade 3" />
       </PriorityContainer>
       <PriorityContainer>
         <ImagePins src={pin_purple} alt="Imagem" />
-        <EditableButton initialValue="Prioridade 4" />
+        <EditableForm initialValue="Prioridade 4" />
       </PriorityContainer>
       <PriorityContainer>
         <ImagePins src={pin_yellow} alt="Imagem" />
-        <EditableButton initialValue="Prioridade 5" />
+        <EditableForm initialValue="Prioridade 5" />
       </PriorityContainer>
       <ButtonsContainer style={{ marginTop: 'auto' }}>
         <ButtonRow>
@@ -114,7 +117,7 @@ const HomeScreen = () => {
             <ImageIcons src={avatar} alt="avatar" />
           </IconButton>
           <IconButton>
-            <ImageIcons src={exit} onClick={handleExitClick} alt="exit" style={{ width: "50px" }} />
+            <ImageIcons src={exit} onClick={handleExitClick} alt="exit" style={{ width: '50px' }} />
           </IconButton>
         </ButtonRow>
       </ButtonsContainer>

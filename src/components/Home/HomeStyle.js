@@ -83,7 +83,7 @@ export const FloatingButton = styled.button`
 `;
 
 export const BackgroundImage = styled.div`
-  background-image: url(${backgroundImage});  /* Use the imported image as background */
+  background-image: url(${backgroundImage});
   background-size: cover;
   position: absolute;
   top: 0;
@@ -96,9 +96,9 @@ export const BackgroundImage = styled.div`
 export const PriorityContainer = styled.div`
     display: flex;
     align-items: center;
-    margin-bottom: 10px; /* Adicione o espaçamento desejado entre as prioridades */
-    font-size: 24px; /* Altere o tamanho da fonte para torná-la maior */
-    margin-top: 20px; /* Ajuste a margem superior conforme necessário */
+    margin-bottom: 10px; 
+    font-size: 24px; 
+    margin-top: 20px; 
 `;
 
 export const ButtonsContainer = styled.div`
