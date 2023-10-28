@@ -12,6 +12,17 @@ export const SidebarContainer = styled.div`
   padding: 20px;
 `;
 
+export const MainContainer = styled.div`
+  flex: 1; /* Ocupa todo o espaço restante */
+  display: flex;
+  flex-direction: column;
+`;
+
+export const AppContainer = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
 export const Image = styled.img`
   width: 80%;
   max-height: 200px;
@@ -151,3 +162,40 @@ export const PinIcon = styled(BsFillPinAngleFill)`
 `;
 
 
+export const Card = styled.div`
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+export const Title = styled.h2`
+  font-size: 18px;
+  color: #333;
+`;
+
+export const Description = styled.p`
+  font-size: 14px;
+  color: #666;
+`;
+
+export const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column; /* Mantenha a direção da coluna para empilhar informações verticalmente */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+export const CardsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Alinhe à esquerda */
+  margin-top: 25px; /* Adicione espaço em cima */
+  margin-left: 25 px; /* Adicione espaço à esquerda */
+`;
