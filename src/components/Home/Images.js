@@ -1,0 +1,10 @@
+export { default as polaroidImage } from './homeImages/polaroid.png';
+export { default as share1 } from './homeImages/share.png';
+export { default as share2 } from './homeImages/share2.png';
+export { default as exit } from './homeImages/exitIcon.png';
+export { default as avatar } from './homeImages/avatar.png';
+export { default as pin_red } from './homeImages/pin_red.png';
+export { default as pin_blue } from './homeImages/pin_blue.png';
+export { default as pin_green } from './homeImages/pin_green.png';
+export { default as pin_yellow } from './homeImages/pin_yellow.png';
+export { default as pin_purple } from './homeImages/pin_purple.png';

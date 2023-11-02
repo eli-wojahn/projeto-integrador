@@ -3,94 +3,36 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import polaroidImage from './polaroid.png';
-import share1 from './share.png';
-import share2 from './share2.png';
-import exit from './exitIcon.png';
-import avatar from './avatar.png';
-import pin_red from './pin_red.png';
-import pin_blue from './pin_blue.png';
-import pin_green from './pin_green.png';
-import pin_yellow from './pin_yellow.png';
-import pin_purple from './pin_purple.png';
+import Sidebar from './Sidebar';
 
 import {
-  SidebarContainer,
-  Button,
-  Image,
-  ImageIcons,
-  FloatingButton,
-  BackgroundImage,
-  PriorityContainer,
-  ButtonsContainer,
-  IconButton,
-  ButtonRow,
-  ImagePins,
   AppContainer,
   MainContainer,
   Card,
   Title,
   Description,
   CardContainer,
-  CardsContainer
+  CardsContainer,
+  FloatingButton,
+  BackgroundImage
 } from './HomeStyle';
 
-const PriorityField = ({ id, initialValue }) => {
-  const [text, setText] = useState(initialValue);
-
-  const updatePriority = async () => {
-    try {
-      await axios.put(`http://localhost:3001/prioridades/${id}`, { nome: text });
-    } catch (error) {
-      console.error('Erro ao atualizar a prioridade:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (initialValue !== text) {
-      updatePriority();
-    }
-  }, [text, initialValue, id]);
-
-  return (
-    <input
-      type="text"
-      value={text}
-      onChange={(e) => {
-        if (e.target.value.length <= 14) {
-          setText(e.target.value);
-        }
-      }}
-      onBlur={updatePriority}
-      maxLength={14}
-      title="Customize aqui o nome da prioridade"
-      style={{
-        backgroundColor: '#f0f0f0',
-        border: 'none',
-        outline: 'none',
-        width: '100%',
-        fontSize: '16px',
-        padding: '5px',
-      }}
-    />
-  );
-};
-
-const imageSrc = polaroidImage;
 
 const HomeScreen = () => {
   const navigate = useNavigate();
-  const [desejos, setDesejos] = useState([]); // Lista de desejos
+  const [desejos, setDesejos] = useState([]);
 
   useEffect(() => {
-    // Fazer uma solicitação ao servidor para obter a lista de desejos
-    axios.get('http://localhost:3001/desejos')
-      .then((response) => {
+    const fetchDesejos = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/desejos');
         setDesejos(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Erro ao obter a lista de desejos:', error);
-      });
+      }
+    };
+
+    fetchDesejos();
   }, []);
 
   const handleExitClick = () => {
@@ -111,11 +53,10 @@ const HomeScreen = () => {
         const description = document.getElementById('swal-input2').value;
         const status = document.getElementById('swal-input3').value;
         const url = document.getElementById('swal-input4').value;
-        const usuario_id = 1; // Defina o ID do usuário desejado
-        const prioridade_id = 1; // Defina o ID da prioridade desejada
+        const usuario_id = 1; 
+        const prioridade_id = 1; 
 
         try {
-          // Enviar os dados do desejo para o servidor
           const response = await axios.post('http://localhost:3001/desejos', {
             nome: name,
             descricao: description,
@@ -127,7 +68,6 @@ const HomeScreen = () => {
 
           if (response.data) {
             console.log('Desejo criado:', response.data);
-            // Adicionar o desejo à lista de desejos
             setDesejos([...desejos, response.data]);
           }
         } catch (error) {
@@ -136,18 +76,99 @@ const HomeScreen = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        // Atualize a interface do usuário ou execute outras ações, se necessário
       }
     });
   };
 
+  const editDesejo = (desejo) => {
+    Swal.fire({
+      title: 'Editar Desejo',
+      html:
+        '<input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="' +
+        desejo.nome +
+        '">' +
+        '<input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="' +
+        desejo.descricao +
+        '">' +
+        '<input id="swal-edit-input3" class="swal2-input" placeholder="Status" value="' +
+        desejo.status +
+        '">' +
+        '<input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="' +
+        desejo.url +
+        '">',
+      focusConfirm: false,
+      showCancelButton: true,
+      showConfirmButton: true,
+      confirmButtonText: 'Salvar',
+      cancelButtonText: 'Cancelar',
+      showDenyButton: true,
+      denyButtonText: 'Excluir',
+      preConfirm: async () => {
+        const name = document.getElementById('swal-edit-input1').value;
+        const description = document.getElementById('swal-edit-input2').value;
+        const status = document.getElementById('swal-edit-input3').value;
+        const url = document.getElementById('swal-edit-input4').value;
+  
+        const updatedDesejo = {
+          ...desejo,
+          nome: name,
+          descricao: description,
+          status,
+          url,
+          usuario_id: 1, 
+          prioridade_id: 1,
+        };
+  
+        try {
+          const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
+          if (response.data) {
+            const index = desejos.findIndex((d) => d.id === desejo.id);
+            const updatedDesejos = [...desejos];
+            updatedDesejos[index] = response.data;
+            setDesejos(updatedDesejos);
+          }
+        } catch (error) {
+          console.error('Erro ao editar o desejo:', error);
+        }
+      },
+      willClose: (modal) => {
+        if (modal.isDenied) {
+          deleteDesejo(desejo.id);
+        }
+      },
+    });
+  };
+
+  const deleteDesejo = async (desejoId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3001/desejos/${desejoId}`);
+      console.log('Delete response:', response); 
+  
+      if (response.status === 200) {
+        const updatedDesejos = desejos.filter((d) => d.id !== desejoId);
+        setDesejos(updatedDesejos);
+  
+        console.log('Desejo excluído:', desejoId);
+      } else {
+        console.error('Erro ao excluir o desejo:', response);
+      }
+    } catch (error) {
+      console.error('Erro ao excluir o desejo:', error);
+    } finally {
+      Swal.close();
+    }
+  };
+
   const DesejoCard = ({ desejo }) => {
+    const openEditModal = async () => {
+      editDesejo(desejo);
+    };
+
     return (
-      <CardContainer>
+      <CardContainer onClick={openEditModal}>
         <Card>
           <Title>{desejo.nome}</Title>
           <Description>{desejo.descricao}</Description>
-          {/* Adicione mais informações do desejo, como status, URL, etc., conforme necessário */}
         </Card>
       </CardContainer>
     );
@@ -156,55 +177,7 @@ const HomeScreen = () => {
 
   return (
     <AppContainer>
-      <SidebarContainer>
-        <Image src={imageSrc} alt="Imagem" />
-        <Button>Organizar</Button>
-        <PriorityContainer>
-          <ImagePins src={pin_red} alt="Imagem" />
-          <PriorityField initialValue="Prioridade 1" />
-        </PriorityContainer>
-        <PriorityContainer>
-          <ImagePins src={pin_blue} alt="Imagem" />
-          <PriorityField initialValue="Prioridade 2" />
-        </PriorityContainer>
-        <PriorityContainer>
-          <ImagePins src={pin_green} alt="Imagem" />
-          <PriorityField initialValue="Prioridade 3" />
-        </PriorityContainer>
-        <PriorityContainer>
-          <ImagePins src={pin_purple} alt="Imagem" />
-          <PriorityField initialValue="Prioridade 4" />
-        </PriorityContainer>
-        <PriorityContainer>
-          <ImagePins src={pin_yellow} alt="Imagem" />
-          <PriorityField initialValue="Prioridade 5" />
-        </PriorityContainer>
-        <ButtonsContainer style={{ marginTop: 'auto' }}>
-          <ButtonRow>
-            <IconButton>
-              <ImageIcons src={share1} alt="share" />
-            </IconButton>
-            <IconButton>
-              <ImageIcons src={share2} alt="share" />
-            </IconButton>
-          </ButtonRow>
-          <ButtonRow>
-            <IconButton>
-              <ImageIcons src={avatar} alt="avatar" />
-            </IconButton>
-            <IconButton>
-              <ImageIcons
-                src={exit}
-                onClick={handleExitClick}
-                alt="exit"
-                style={{ width: '50px' }}
-              />
-            </IconButton>
-          </ButtonRow>
-        </ButtonsContainer>
-        <FloatingButton onClick={openModal}>+</FloatingButton>
-        <BackgroundImage />
-      </SidebarContainer>
+      <Sidebar handleExitClick={handleExitClick} openModal={openModal} />
       <MainContainer>
         <CardsContainer>
           {desejos.map((desejo) => (
@@ -212,8 +185,11 @@ const HomeScreen = () => {
           ))}
         </CardsContainer>
       </MainContainer>
+      <BackgroundImage />
+      <FloatingButton onClick={openModal}>+</FloatingButton>
     </AppContainer>
   );
 };
+
 
 export default HomeScreen;

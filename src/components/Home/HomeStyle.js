@@ -183,13 +183,14 @@ export const Description = styled.p`
 
 export const CardContainer = styled.div`
   display: flex;
-  flex-direction: column; /* Mantenha a direção da coluna para empilhar informações verticalmente */
+  flex-direction: column;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer; /* Change the cursor to a pointer on hover */
 `;
 
 export const CardsContainer = styled.div`
