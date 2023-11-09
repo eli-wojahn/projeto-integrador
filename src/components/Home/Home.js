@@ -6,31 +6,49 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 
 import {
-  AppContainer,
-  MainContainer,
-  Card,
-  Title,
-  Description,
-  CardContainer,
-  CardsContainer,
-  FloatingButton,
-  BackgroundImage
+  AppContainer, MainContainer, CardsContainer, FloatingButton, BackgroundImage, PolaroidBg
 } from './HomeStyle';
 
+import { Card, CardContent, CardActionArea, Typography } from '@mui/material';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
   const [desejos, setDesejos] = useState([]);
+  const [productImages, setProductImages] = useState({});
+
+  const fetchDesejos = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/desejos');
+      const desejoData = response.data;
+
+      const productImagesData = {};
+      await Promise.all(
+        desejoData.map(async (desejo) => {
+          if (desejo.url) {
+            try {
+              const imageResponse = await axios.get(desejo.url, {
+                responseType: 'arraybuffer',
+              });
+              const imageBlob = new Blob([imageResponse.data], {
+                type: imageResponse.headers['content-type'],
+              });
+              const imageUrl = URL.createObjectURL(imageBlob);
+              productImagesData[desejo.id] = imageUrl;
+            } catch (error) {
+              console.error('Error fetching product image:', error);
+            }
+          }
+        })
+      );
+
+      setProductImages(productImagesData);
+      setDesejos(desejoData);
+    } catch (error) {
+      console.error('Error fetching desejo data:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchDesejos = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/desejos');
-        setDesejos(response.data);
-      } catch (error) {
-        console.error('Erro ao obter a lista de desejos:', error);
-      }
-    };
 
     fetchDesejos();
   }, []);
@@ -53,8 +71,8 @@ const HomeScreen = () => {
         const description = document.getElementById('swal-input2').value;
         const status = document.getElementById('swal-input3').value;
         const url = document.getElementById('swal-input4').value;
-        const usuario_id = 1; 
-        const prioridade_id = 1; 
+        const usuario_id = 1;
+        const prioridade_id = 1;
 
         try {
           const response = await axios.post('http://localhost:3001/desejos', {
@@ -108,24 +126,21 @@ const HomeScreen = () => {
         const description = document.getElementById('swal-edit-input2').value;
         const status = document.getElementById('swal-edit-input3').value;
         const url = document.getElementById('swal-edit-input4').value;
-  
+
         const updatedDesejo = {
           ...desejo,
           nome: name,
           descricao: description,
           status,
           url,
-          usuario_id: 1, 
+          usuario_id: 1,
           prioridade_id: 1,
         };
-  
+
         try {
           const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
           if (response.data) {
-            const index = desejos.findIndex((d) => d.id === desejo.id);
-            const updatedDesejos = [...desejos];
-            updatedDesejos[index] = response.data;
-            setDesejos(updatedDesejos);
+            fetchDesejos();
           }
         } catch (error) {
           console.error('Erro ao editar o desejo:', error);
@@ -139,18 +154,47 @@ const HomeScreen = () => {
     });
   };
 
+  const DesejoCard = ({ desejo, editDesejo, productImages }) => {
+    const openEditModal = async () => {
+      editDesejo(desejo);
+    };
+
+    return (
+      <Card onClick={openEditModal} style={{marginLeft: "35px"}}> 
+        <CardActionArea>
+          {desejo.url && productImages[desejo.id] ? (
+            <img src={productImages[desejo.id]} alt={desejo.nome} />
+          ) : (
+            <CardContent>
+              <PolaroidBg></PolaroidBg>
+              <Typography variant="h6" style={{fontWeight: "bold"}}>{desejo.nome}</Typography>
+              <Typography variant="body2">{desejo.descricao}</Typography>
+            </CardContent>
+          )}
+        </CardActionArea>
+      </Card>
+    );
+  };
+
   const deleteDesejo = async (desejoId) => {
+    console.log('Tentando excluir desejo com ID:', desejoId);
+
     try {
       const response = await axios.delete(`http://localhost:3001/desejos/${desejoId}`);
-      console.log('Delete response:', response); 
-  
+      console.log('Resposta da exclusão:', response);
+
       if (response.status === 200) {
+        // A exclusão foi bem-sucedida, você pode executar ações adicionais aqui
+        console.log('Desejo excluído com sucesso:', desejoId);
+
+        // Por exemplo, atualizar o estado local para refletir a exclusão
         const updatedDesejos = desejos.filter((d) => d.id !== desejoId);
         setDesejos(updatedDesejos);
-  
-        console.log('Desejo excluído:', desejoId);
       } else {
+        // A exclusão não foi bem-sucedida, trate-a aqui
         console.error('Erro ao excluir o desejo:', response);
+
+        // Você pode exibir uma mensagem de erro para o usuário, se necessário
       }
     } catch (error) {
       console.error('Erro ao excluir o desejo:', error);
@@ -159,20 +203,7 @@ const HomeScreen = () => {
     }
   };
 
-  const DesejoCard = ({ desejo }) => {
-    const openEditModal = async () => {
-      editDesejo(desejo);
-    };
 
-    return (
-      <CardContainer onClick={openEditModal}>
-        <Card>
-          <Title>{desejo.nome}</Title>
-          <Description>{desejo.descricao}</Description>
-        </Card>
-      </CardContainer>
-    );
-  };
 
 
   return (
@@ -181,7 +212,7 @@ const HomeScreen = () => {
       <MainContainer>
         <CardsContainer>
           {desejos.map((desejo) => (
-            <DesejoCard key={desejo.id} desejo={desejo} />
+            <DesejoCard key={desejo.id} desejo={desejo} editDesejo={editDesejo} productImages={productImages} />
           ))}
         </CardsContainer>
       </MainContainer>
@@ -190,6 +221,7 @@ const HomeScreen = () => {
     </AppContainer>
   );
 };
+
 
 
 export default HomeScreen;

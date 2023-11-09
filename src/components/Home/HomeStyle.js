@@ -181,22 +181,23 @@ export const Description = styled.p`
   color: #666;
 `;
 
-export const CardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer; /* Change the cursor to a pointer on hover */
-`;
 
 export const CardsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* Alinhe à esquerda */
   margin-top: 25px; /* Adicione espaço em cima */
-  margin-left: 25 px; /* Adicione espaço à esquerda */
 `;
+
+export const PolaroidBg = styled.div`
+  display: block;
+  background: #000;
+  width: 100%;
+  height: 150px;
+  margin-bottom: 10px;
+  max-height: 200px;
+  max-width: 170px;
+  min-width: 170px;
+`;
+
+
+
