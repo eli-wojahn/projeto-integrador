@@ -41,17 +41,22 @@ const HomeScreen = () => {
       html:
         '<input id="swal-input1" class="swal2-input" placeholder="Nome">' +
         '<input id="swal-input2" class="swal2-input" placeholder="Descrição">' +
-        '<input id="swal-input3" class="swal2-input" placeholder="Status">' +
-        '<input id="swal-input4" class="swal2-input" placeholder="URL">',
+        '<input id="swal-input4" class="swal2-input" placeholder="URL">' +
+        '<div class="swal2-radio">' +
+          '<input type="radio" id="radio-disponivel" name="status" value="Disponível">' +
+          '<label for="radio-disponivel">Disponível</label>' +
+          '<input type="radio" id="radio-reservado" name="status" value="Reservado">' +
+          '<label for="radio-reservado">Reservado</label>' +
+        '</div>',
       focusConfirm: false,
       preConfirm: async () => {
         const name = document.getElementById('swal-input1').value;
         const description = document.getElementById('swal-input2').value;
-        const status = document.getElementById('swal-input3').value;
+        const status = document.querySelector('input[name="status"]:checked').value;
         const url = document.getElementById('swal-input4').value;
         const usuario_id = 1;
         const prioridade_id = 1;
-
+  
         try {
           const response = await axios.post('http://localhost:3001/desejos', {
             nome: name,
@@ -61,7 +66,7 @@ const HomeScreen = () => {
             usuario_id: usuario_id,
             prioridade_id: prioridade_id,
           });
-
+  
           if (response.data) {
             console.log('Desejo criado:', response.data);
             setDesejos([...desejos, response.data]);
@@ -77,6 +82,9 @@ const HomeScreen = () => {
   };
 
   const editDesejo = (desejo) => {
+    const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
+    const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
+  
     Swal.fire({
       title: 'Editar Desejo',
       html:
@@ -86,9 +94,12 @@ const HomeScreen = () => {
         '<input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="' +
         desejo.descricao +
         '">' +
-        '<input id="swal-edit-input3" class="swal2-input" placeholder="Status" value="' +
-        desejo.status +
-        '">' +
+        '<div class="swal2-radio">' +
+          `<input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>` +
+          '<label for="radio-disponivel">Disponível</label>' +
+          `<input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>` +
+          '<label for="radio-reservado">Reservado</label>' +
+        '</div>' +
         '<input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="' +
         desejo.url +
         '">',
@@ -102,9 +113,9 @@ const HomeScreen = () => {
       preConfirm: async () => {
         const name = document.getElementById('swal-edit-input1').value;
         const description = document.getElementById('swal-edit-input2').value;
-        const status = document.getElementById('swal-edit-input3').value;
+        const status = document.querySelector('input[name="status"]:checked').value;
         const url = document.getElementById('swal-edit-input4').value;
-
+  
         const updatedDesejo = {
           ...desejo,
           nome: name,
@@ -114,7 +125,7 @@ const HomeScreen = () => {
           usuario_id: 1,
           prioridade_id: 1,
         };
-
+  
         try {
           const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
           if (response.data) {
@@ -132,8 +143,6 @@ const HomeScreen = () => {
       const response = await axios.delete(`http://localhost:3001/desejos/${desejoId}`);
 
       if (response.status === 200) {
-        // Atualizar o estado local removendo o desejo excluído
-       //  setDesejos((prevDesejos) => prevDesejos.filter((desejo) => desejo.id !== desejoId));
         fetchDesejos()
 
         Swal.fire('Removido!', 'O desejo foi removido com sucesso.', 'success');
@@ -150,14 +159,22 @@ const HomeScreen = () => {
 
   const DesejoCard = ({ desejo, productImages }) => {
     const openEditModal = async () => {
+      const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
+      const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
+  
       Swal.fire({
         title: 'Editar Desejo',
         html: `
           <input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="${desejo.nome}">
           <input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="${desejo.descricao}">
-          <input id="swal-edit-input3" class="swal2-input" placeholder="Status" value="${desejo.status}">
+          <div class="swal2-radio">
+            <input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>
+            <label for="radio-disponivel">Disponível</label>
+            <input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>
+            <label for="radio-reservado">Reservado</label>
+          </div>
           <input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="${desejo.url}">
-          `,
+        `,
         focusConfirm: false,
         showCancelButton: true,
         showConfirmButton: true,
@@ -168,9 +185,9 @@ const HomeScreen = () => {
         preConfirm: async () => {
           const name = document.getElementById('swal-edit-input1').value;
           const description = document.getElementById('swal-edit-input2').value;
-          const status = document.getElementById('swal-edit-input3').value;
+          const status = document.querySelector('input[name="status"]:checked').value;
           const url = document.getElementById('swal-edit-input4').value;
-
+  
           const updatedDesejo = {
             ...desejo,
             nome: name,
@@ -180,7 +197,7 @@ const HomeScreen = () => {
             usuario_id: 1,
             prioridade_id: 1,
           };
-
+  
           try {
             const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
             if (response.data) {
@@ -196,7 +213,7 @@ const HomeScreen = () => {
         }
       });
     };
-    
+  
     return (
       <Card onClick={openEditModal} style={{ marginLeft: '35px' }}>
         <CardActionArea>
