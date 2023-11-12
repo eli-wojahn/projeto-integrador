@@ -9,7 +9,7 @@ import {
   AppContainer, MainContainer, CardsContainer, FloatingButton, BackgroundImage, PolaroidBg
 } from './HomeStyle';
 
-import { Card, CardContent, CardActionArea, Typography } from '@mui/material';
+import { Card, CardActionArea, CardActions, CardContent, Typography, Button } from '@mui/material';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
@@ -21,27 +21,6 @@ const HomeScreen = () => {
       const response = await axios.get('http://localhost:3001/desejos');
       const desejoData = response.data;
 
-      const productImagesData = {};
-      await Promise.all(
-        desejoData.map(async (desejo) => {
-          if (desejo.url) {
-            try {
-              const imageResponse = await axios.get(desejo.url, {
-                responseType: 'arraybuffer',
-              });
-              const imageBlob = new Blob([imageResponse.data], {
-                type: imageResponse.headers['content-type'],
-              });
-              const imageUrl = URL.createObjectURL(imageBlob);
-              productImagesData[desejo.id] = imageUrl;
-            } catch (error) {
-              console.error('Error fetching product image:', error);
-            }
-          }
-        })
-      );
-
-      setProductImages(productImagesData);
       setDesejos(desejoData);
     } catch (error) {
       console.error('Error fetching desejo data:', error);
@@ -49,7 +28,6 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-
     fetchDesejos();
   }, []);
 
@@ -146,65 +124,75 @@ const HomeScreen = () => {
           console.error('Erro ao editar o desejo:', error);
         }
       },
-      willClose: (modal) => {
-        if (modal.isDenied) {
-          deleteDesejo(desejo.id);
-        }
-      },
     });
   };
+
+  const removeDesejo = async (desejoId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3001/desejos/${desejoId}`);
+
+      if (response.status === 200) {
+        Swal.fire('Removido!', 'O desejo foi removido com sucesso.', 'success');
+        // Não é necessário mais setDesejos([...desejos, response.data]);
+      }
+    } catch (error) {
+      console.error('Erro ao remover desejo:', error);
+      Swal.fire('Erro!', 'Ocorreu um erro ao remover o desejo.', 'error');
+    }
+  };
+
+  useEffect(() => {
+    fetchDesejos();
+  }, [])
 
   const DesejoCard = ({ desejo, editDesejo, productImages }) => {
     const openEditModal = async () => {
       editDesejo(desejo);
     };
 
+    const removeDesejoHandler = async (e) => {
+      e.stopPropagation();
+
+      Swal.fire({
+        title: 'Você tem certeza?',
+        text: 'O desejo será removido permanentemente!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, remover!',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          removeDesejo(desejo.id);
+          // Refetch os desejos após a remoção bem-sucedida
+          fetchDesejos();
+        }
+      });
+    };
+
+
     return (
-      <Card onClick={openEditModal} style={{marginLeft: "35px"}}> 
+      <Card onClick={openEditModal} style={{ marginLeft: "35px" }}>
         <CardActionArea>
           {desejo.url && productImages[desejo.id] ? (
             <img src={productImages[desejo.id]} alt={desejo.nome} />
           ) : (
             <CardContent>
               <PolaroidBg></PolaroidBg>
-              <Typography variant="h6" style={{fontWeight: "bold"}}>{desejo.nome}</Typography>
+              <Typography variant="h6" style={{ fontWeight: "bold" }}>{desejo.nome}</Typography>
               <Typography variant="body2">{desejo.descricao}</Typography>
             </CardContent>
           )}
         </CardActionArea>
+        <CardActions>
+          <Button size="small" color="secondary" onClick={removeDesejoHandler}>
+            Remover
+          </Button>
+        </CardActions>
       </Card>
     );
   };
-
-  const deleteDesejo = async (desejoId) => {
-    console.log('Tentando excluir desejo com ID:', desejoId);
-
-    try {
-      const response = await axios.delete(`http://localhost:3001/desejos/${desejoId}`);
-      console.log('Resposta da exclusão:', response);
-
-      if (response.status === 200) {
-        // A exclusão foi bem-sucedida, você pode executar ações adicionais aqui
-        console.log('Desejo excluído com sucesso:', desejoId);
-
-        // Por exemplo, atualizar o estado local para refletir a exclusão
-        const updatedDesejos = desejos.filter((d) => d.id !== desejoId);
-        setDesejos(updatedDesejos);
-      } else {
-        // A exclusão não foi bem-sucedida, trate-a aqui
-        console.error('Erro ao excluir o desejo:', response);
-
-        // Você pode exibir uma mensagem de erro para o usuário, se necessário
-      }
-    } catch (error) {
-      console.error('Erro ao excluir o desejo:', error);
-    } finally {
-      Swal.close();
-    }
-  };
-
-
-
 
   return (
     <AppContainer>
