@@ -201,3 +201,19 @@ export const PolaroidBg = styled.div`
 
 
 
+export const FadeInImage = styled.img`
+  opacity: 0;
+  animation: fadeIn 2.55s ease-in-out forwards;
+  width: 170px;
+  height: 150px;
+  object-fit: cover;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;

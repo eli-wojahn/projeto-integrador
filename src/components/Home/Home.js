@@ -7,7 +7,7 @@ import Sidebar from './Sidebar';
 import reservedImage from './homeImages/reservado3.png';
 
 import {
-  AppContainer, MainContainer, CardsContainer, FloatingButton, BackgroundImage, PolaroidBg
+  AppContainer, MainContainer, CardsContainer, BackgroundImage, PolaroidBg, FadeInImage
 } from './HomeStyle';
 
 import { Card, CardActionArea, CardContent, Fab, Typography, } from '@mui/material';
@@ -40,22 +40,30 @@ const HomeScreen = () => {
   const openModal = () => {
     Swal.fire({
       title: 'Adicione seu desejo',
-      html:
-        '<input id="swal-input1" class="swal2-input" placeholder="Nome">' +
-        '<input id="swal-input2" class="swal2-input" placeholder="Descrição">' +
-        '<input id="swal-input4" class="swal2-input" placeholder="URL">' +
-        '<div class="swal2-radio">' +
-        '<input type="radio" id="radio-disponivel" name="status" value="Disponível">' +
-        '<label for="radio-disponivel">Disponível</label>' +
-        '<input type="radio" id="radio-reservado" name="status" value="Reservado">' +
-        '<label for="radio-reservado">Reservado</label>' +
-        '</div>',
+      html: `
+        <input id="swal-input1" class="swal2-input" placeholder="Nome">
+        <input id="swal-input2" class="swal2-input" placeholder="Descrição">
+        <input id="swal-input4" class="swal2-input" placeholder="URL">
+        <input type="file" id="swal-file-input" class="swal2-file">
+        <div class="swal2-radio">
+          <input type="radio" id="radio-disponivel" name="status" value="Disponível">
+          <label for="radio-disponivel">Disponível</label>
+          <input type="radio" id="radio-reservado" name="status" value="Reservado">
+          <label for="radio-reservado">Reservado</label>
+        </div>
+      `,
       focusConfirm: false,
       preConfirm: async () => {
         const name = document.getElementById('swal-input1').value;
         const description = document.getElementById('swal-input2').value;
         const status = document.querySelector('input[name="status"]:checked').value;
         const url = document.getElementById('swal-input4').value;
+        const fileInput = document.getElementById('swal-file-input');
+        const file = fileInput.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
+
         const usuario_id = 1;
         const prioridade_id = 1;
 
@@ -67,6 +75,7 @@ const HomeScreen = () => {
             url: url,
             usuario_id: usuario_id,
             prioridade_id: prioridade_id,
+            file: formData,
           });
 
           if (response.data) {
@@ -89,22 +98,18 @@ const HomeScreen = () => {
 
     Swal.fire({
       title: 'Editar Desejo',
-      html:
-        '<input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="' +
-        desejo.nome +
-        '">' +
-        '<input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="' +
-        desejo.descricao +
-        '">' +
-        '<div class="swal2-radio">' +
-        `<input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>` +
-        '<label for="radio-disponivel">Disponível</label>' +
-        `<input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>` +
-        '<label for="radio-reservado">Reservado</label>' +
-        '</div>' +
-        '<input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="' +
-        desejo.url +
-        '">',
+      html: `
+        <input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="${desejo.nome}">
+        <input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="${desejo.descricao}">
+        <input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="${desejo.url}">
+        <input type="file" id="swal-file-input" class="swal2-file">
+        <div class="swal2-radio">
+          <input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>
+          <label for="radio-disponivel">Disponível</label>
+          <input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>
+          <label for="radio-reservado">Reservado</label>
+        </div>
+      `,
       focusConfirm: false,
       showCancelButton: true,
       showConfirmButton: true,
@@ -117,6 +122,11 @@ const HomeScreen = () => {
         const description = document.getElementById('swal-edit-input2').value;
         const status = document.querySelector('input[name="status"]:checked').value;
         const url = document.getElementById('swal-edit-input4').value;
+        const fileInput = document.getElementById('swal-file-input');
+        const file = fileInput.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
 
         const updatedDesejo = {
           ...desejo,
@@ -126,6 +136,7 @@ const HomeScreen = () => {
           url,
           usuario_id: 1,
           prioridade_id: 1,
+          file: formData,
         };
 
         try {
@@ -170,13 +181,13 @@ const HomeScreen = () => {
           <input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="${desejo.nome}">
           <input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="${desejo.descricao}">
           <input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="${desejo.url}">
+          <input type="file" id="swal-file-input" class="swal2-file">
           <div class="swal2-radio">
             <input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>
             <label for="radio-disponivel">Disponível</label>
             <input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>
             <label for="radio-reservado">Reservado</label>
           </div>
-
         `,
         focusConfirm: false,
         showCancelButton: true,
@@ -190,6 +201,11 @@ const HomeScreen = () => {
           const description = document.getElementById('swal-edit-input2').value;
           const status = document.querySelector('input[name="status"]:checked').value;
           const url = document.getElementById('swal-edit-input4').value;
+          const fileInput = document.getElementById('swal-file-input');
+          const file = fileInput.files[0];
+
+          const formData = new FormData();
+          formData.append('file', file);
 
           const updatedDesejo = {
             ...desejo,
@@ -199,6 +215,7 @@ const HomeScreen = () => {
             url,
             usuario_id: 1,
             prioridade_id: 1,
+            file: formData,
           };
 
           try {
@@ -221,11 +238,20 @@ const HomeScreen = () => {
       <Card onClick={openEditModal} style={{ marginLeft: '35px', position: 'relative' }}>
         <CardActionArea style={{ position: 'relative' }}>
           <CardContent style={{ position: 'relative', zIndex: 1 }}>
-            <PolaroidBg></PolaroidBg>
+            <PolaroidBg>
+              {desejo.imagem && (
+                <FadeInImage
+                  src={`${desejo.imagem}`}
+                  alt="Desejo Image"
+                  className="fade-in-image"
+                />
+              )}
+            </PolaroidBg>
             <Typography variant="h6" style={{ fontWeight: 'bold' }}>
               {desejo.nome}
             </Typography>
             <Typography variant="body2">{desejo.descricao}</Typography>
+
           </CardContent>
           {desejo.status === 'Reservado' && (
             <img
@@ -265,11 +291,11 @@ const HomeScreen = () => {
           position: 'fixed',
           bottom: 90,
           right: 90,
-          width: 110,
-          height: 110,
+          width: 100,
+          height: 100,
           backgroundColor: '#BB6CB9',
           '& .MuiSvgIcon-root': {
-            fontSize: 60, 
+            fontSize: 60,
           },
           boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)',
         }}
