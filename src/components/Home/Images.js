@@ -8,3 +8,4 @@ export { default as pin_blue } from './homeImages/pin_blue.png';
 export { default as pin_green } from './homeImages/pin_green.png';
 export { default as pin_yellow } from './homeImages/pin_yellow.png';
 export { default as pin_purple } from './homeImages/pin_purple.png';
+export {default as reserved } from './homeImages/reserved.png';

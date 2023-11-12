@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import Sidebar from './Sidebar';
+import reservedImage from './homeImages/reservado3.png';
 
 import {
   AppContainer, MainContainer, CardsContainer, FloatingButton, BackgroundImage, PolaroidBg
 } from './HomeStyle';
 
-import { Card, CardActionArea, CardActions, CardContent, Typography, Button } from '@mui/material';
+import { Card, CardActionArea, CardContent, Typography } from '@mui/material';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
@@ -43,10 +44,10 @@ const HomeScreen = () => {
         '<input id="swal-input2" class="swal2-input" placeholder="Descrição">' +
         '<input id="swal-input4" class="swal2-input" placeholder="URL">' +
         '<div class="swal2-radio">' +
-          '<input type="radio" id="radio-disponivel" name="status" value="Disponível">' +
-          '<label for="radio-disponivel">Disponível</label>' +
-          '<input type="radio" id="radio-reservado" name="status" value="Reservado">' +
-          '<label for="radio-reservado">Reservado</label>' +
+        '<input type="radio" id="radio-disponivel" name="status" value="Disponível">' +
+        '<label for="radio-disponivel">Disponível</label>' +
+        '<input type="radio" id="radio-reservado" name="status" value="Reservado">' +
+        '<label for="radio-reservado">Reservado</label>' +
         '</div>',
       focusConfirm: false,
       preConfirm: async () => {
@@ -56,7 +57,7 @@ const HomeScreen = () => {
         const url = document.getElementById('swal-input4').value;
         const usuario_id = 1;
         const prioridade_id = 1;
-  
+
         try {
           const response = await axios.post('http://localhost:3001/desejos', {
             nome: name,
@@ -66,7 +67,7 @@ const HomeScreen = () => {
             usuario_id: usuario_id,
             prioridade_id: prioridade_id,
           });
-  
+
           if (response.data) {
             console.log('Desejo criado:', response.data);
             setDesejos([...desejos, response.data]);
@@ -84,7 +85,7 @@ const HomeScreen = () => {
   const editDesejo = (desejo) => {
     const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
     const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
-  
+
     Swal.fire({
       title: 'Editar Desejo',
       html:
@@ -95,10 +96,10 @@ const HomeScreen = () => {
         desejo.descricao +
         '">' +
         '<div class="swal2-radio">' +
-          `<input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>` +
-          '<label for="radio-disponivel">Disponível</label>' +
-          `<input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>` +
-          '<label for="radio-reservado">Reservado</label>' +
+        `<input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>` +
+        '<label for="radio-disponivel">Disponível</label>' +
+        `<input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>` +
+        '<label for="radio-reservado">Reservado</label>' +
         '</div>' +
         '<input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="' +
         desejo.url +
@@ -115,7 +116,7 @@ const HomeScreen = () => {
         const description = document.getElementById('swal-edit-input2').value;
         const status = document.querySelector('input[name="status"]:checked').value;
         const url = document.getElementById('swal-edit-input4').value;
-  
+
         const updatedDesejo = {
           ...desejo,
           nome: name,
@@ -125,7 +126,7 @@ const HomeScreen = () => {
           usuario_id: 1,
           prioridade_id: 1,
         };
-  
+
         try {
           const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
           if (response.data) {
@@ -161,19 +162,20 @@ const HomeScreen = () => {
     const openEditModal = async () => {
       const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
       const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
-  
+
       Swal.fire({
         title: 'Editar Desejo',
         html: `
           <input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="${desejo.nome}">
           <input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="${desejo.descricao}">
+          <input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="${desejo.url}">
           <div class="swal2-radio">
             <input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>
             <label for="radio-disponivel">Disponível</label>
             <input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>
             <label for="radio-reservado">Reservado</label>
           </div>
-          <input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="${desejo.url}">
+
         `,
         focusConfirm: false,
         showCancelButton: true,
@@ -187,7 +189,7 @@ const HomeScreen = () => {
           const description = document.getElementById('swal-edit-input2').value;
           const status = document.querySelector('input[name="status"]:checked').value;
           const url = document.getElementById('swal-edit-input4').value;
-  
+
           const updatedDesejo = {
             ...desejo,
             nome: name,
@@ -197,7 +199,7 @@ const HomeScreen = () => {
             usuario_id: 1,
             prioridade_id: 1,
           };
-  
+
           try {
             const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
             if (response.data) {
@@ -213,20 +215,35 @@ const HomeScreen = () => {
         }
       });
     };
-  
+
     return (
-      <Card onClick={openEditModal} style={{ marginLeft: '35px' }}>
-        <CardActionArea>
+      <Card onClick={openEditModal} style={{ marginLeft: '35px', position: 'relative' }}>
+        <CardActionArea style={{ position: 'relative' }}>
           {desejo.url && productImages[desejo.id] ? (
-            <img src={productImages[desejo.id]} alt={desejo.nome} />
+            <img src={productImages[desejo.id]} alt={desejo.nome} style={{ width: '100%', height: '100%' }} />
           ) : (
-            <CardContent>
+            <CardContent style={{ position: 'relative', zIndex: 1 }}>
               <PolaroidBg></PolaroidBg>
               <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                 {desejo.nome}
               </Typography>
               <Typography variant="body2">{desejo.descricao}</Typography>
             </CardContent>
+          )}
+          {desejo.status === 'Reservado' && (
+            <img
+              src={reservedImage}
+              alt="Reservado"
+              style={{
+                position: 'absolute',
+                top: -5,
+                left: 18,
+                width: '95%',
+                height: '95%', 
+                objectFit: 'cover', 
+                zIndex: 2,
+              }}
+            />
           )}
         </CardActionArea>
       </Card>
