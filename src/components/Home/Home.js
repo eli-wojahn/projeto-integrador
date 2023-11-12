@@ -132,8 +132,11 @@ const HomeScreen = () => {
       const response = await axios.delete(`http://localhost:3001/desejos/${desejoId}`);
 
       if (response.status === 200) {
+        // Atualizar o estado local removendo o desejo excluído
+       //  setDesejos((prevDesejos) => prevDesejos.filter((desejo) => desejo.id !== desejoId));
+        fetchDesejos()
+
         Swal.fire('Removido!', 'O desejo foi removido com sucesso.', 'success');
-        // Não é necessário mais setDesejos([...desejos, response.data]);
       }
     } catch (error) {
       console.error('Erro ao remover desejo:', error);
@@ -145,51 +148,70 @@ const HomeScreen = () => {
     fetchDesejos();
   }, [])
 
-  const DesejoCard = ({ desejo, editDesejo, productImages }) => {
+  const DesejoCard = ({ desejo, productImages }) => {
     const openEditModal = async () => {
-      editDesejo(desejo);
-    };
-
-    const removeDesejoHandler = async (e) => {
-      e.stopPropagation();
-
       Swal.fire({
-        title: 'Você tem certeza?',
-        text: 'O desejo será removido permanentemente!',
-        icon: 'warning',
+        title: 'Editar Desejo',
+        html: `
+          <input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="${desejo.nome}">
+          <input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="${desejo.descricao}">
+          <input id="swal-edit-input3" class="swal2-input" placeholder="Status" value="${desejo.status}">
+          <input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="${desejo.url}">
+          `,
+        focusConfirm: false,
         showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sim, remover!',
+        showConfirmButton: true,
+        confirmButtonText: 'Salvar',
         cancelButtonText: 'Cancelar',
+        showDenyButton: true,
+        denyButtonText: 'Excluir',
+        preConfirm: async () => {
+          const name = document.getElementById('swal-edit-input1').value;
+          const description = document.getElementById('swal-edit-input2').value;
+          const status = document.getElementById('swal-edit-input3').value;
+          const url = document.getElementById('swal-edit-input4').value;
+
+          const updatedDesejo = {
+            ...desejo,
+            nome: name,
+            descricao: description,
+            status,
+            url,
+            usuario_id: 1,
+            prioridade_id: 1,
+          };
+
+          try {
+            const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
+            if (response.data) {
+              fetchDesejos();
+            }
+          } catch (error) {
+            console.error('Erro ao editar o desejo:', error);
+          }
+        },
       }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isDenied) {
           removeDesejo(desejo.id);
-          // Refetch os desejos após a remoção bem-sucedida
-          fetchDesejos();
         }
       });
     };
-
-
+    
     return (
-      <Card onClick={openEditModal} style={{ marginLeft: "35px" }}>
+      <Card onClick={openEditModal} style={{ marginLeft: '35px' }}>
         <CardActionArea>
           {desejo.url && productImages[desejo.id] ? (
             <img src={productImages[desejo.id]} alt={desejo.nome} />
           ) : (
             <CardContent>
               <PolaroidBg></PolaroidBg>
-              <Typography variant="h6" style={{ fontWeight: "bold" }}>{desejo.nome}</Typography>
+              <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                {desejo.nome}
+              </Typography>
               <Typography variant="body2">{desejo.descricao}</Typography>
             </CardContent>
           )}
         </CardActionArea>
-        <CardActions>
-          <Button size="small" color="secondary" onClick={removeDesejoHandler}>
-            Remover
-          </Button>
-        </CardActions>
       </Card>
     );
   };
