@@ -10,12 +10,13 @@ import {
   AppContainer, MainContainer, CardsContainer, FloatingButton, BackgroundImage, PolaroidBg
 } from './HomeStyle';
 
-import { Card, CardActionArea, CardContent, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, Fab, Typography, } from '@mui/material';
+
+import AddIcon from '@mui/icons-material/Add';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
   const [desejos, setDesejos] = useState([]);
-  const [productImages, setProductImages] = useState({});
 
   const fetchDesejos = async () => {
     try {
@@ -158,7 +159,7 @@ const HomeScreen = () => {
     fetchDesejos();
   }, [])
 
-  const DesejoCard = ({ desejo, productImages }) => {
+  const DesejoCard = ({ desejo }) => {
     const openEditModal = async () => {
       const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
       const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
@@ -219,17 +220,13 @@ const HomeScreen = () => {
     return (
       <Card onClick={openEditModal} style={{ marginLeft: '35px', position: 'relative' }}>
         <CardActionArea style={{ position: 'relative' }}>
-          {desejo.url && productImages[desejo.id] ? (
-            <img src={productImages[desejo.id]} alt={desejo.nome} style={{ width: '100%', height: '100%' }} />
-          ) : (
-            <CardContent style={{ position: 'relative', zIndex: 1 }}>
-              <PolaroidBg></PolaroidBg>
-              <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                {desejo.nome}
-              </Typography>
-              <Typography variant="body2">{desejo.descricao}</Typography>
-            </CardContent>
-          )}
+          <CardContent style={{ position: 'relative', zIndex: 1 }}>
+            <PolaroidBg></PolaroidBg>
+            <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+              {desejo.nome}
+            </Typography>
+            <Typography variant="body2">{desejo.descricao}</Typography>
+          </CardContent>
           {desejo.status === 'Reservado' && (
             <img
               src={reservedImage}
@@ -239,8 +236,8 @@ const HomeScreen = () => {
                 top: -5,
                 left: 18,
                 width: '95%',
-                height: '95%', 
-                objectFit: 'cover', 
+                height: '95%',
+                objectFit: 'cover',
                 zIndex: 2,
               }}
             />
@@ -256,12 +253,30 @@ const HomeScreen = () => {
       <MainContainer>
         <CardsContainer>
           {desejos.map((desejo) => (
-            <DesejoCard key={desejo.id} desejo={desejo} editDesejo={editDesejo} productImages={productImages} />
+            <DesejoCard key={desejo.id} desejo={desejo} editDesejo={editDesejo} />
           ))}
         </CardsContainer>
       </MainContainer>
       <BackgroundImage />
-      <FloatingButton onClick={openModal}>+</FloatingButton>
+
+      <Fab
+        color="secondary"
+        sx={{
+          position: 'fixed',
+          bottom: 90,
+          right: 90,
+          width: 110,
+          height: 110,
+          backgroundColor: '#BB6CB9',
+          '& .MuiSvgIcon-root': {
+            fontSize: 60, 
+          },
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)',
+        }}
+        onClick={openModal}
+      >
+        <AddIcon />
+      </Fab>
     </AppContainer>
   );
 };
