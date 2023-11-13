@@ -44,11 +44,10 @@ const HomeScreen = () => {
         <input id="swal-input1" class="swal2-input" placeholder="Nome">
         <input id="swal-input2" class="swal2-input" placeholder="Descrição">
         <input id="swal-input4" class="swal2-input" placeholder="URL">
-        <input type="file" id="swal-file-input" class="swal2-file">
+        <input id="swal-input5" class="swal2-input" placeholder="Imagem">
         <div class="swal2-radio">
           <input type="radio" id="radio-disponivel" name="status" value="Disponível">
           <label for="radio-disponivel">Disponível</label>
-          <input type="radio" id="radio-reservado" name="status" value="Reservado">
           <label for="radio-reservado">Reservado</label>
         </div>
       `,
@@ -58,11 +57,7 @@ const HomeScreen = () => {
         const description = document.getElementById('swal-input2').value;
         const status = document.querySelector('input[name="status"]:checked').value;
         const url = document.getElementById('swal-input4').value;
-        const fileInput = document.getElementById('swal-file-input');
-        const file = fileInput.files[0];
-
-        const formData = new FormData();
-        formData.append('file', file);
+        const imagem = document.getElementById('swal-input5').value;
 
         const usuario_id = 1;
         const prioridade_id = 1;
@@ -73,9 +68,9 @@ const HomeScreen = () => {
             descricao: description,
             status: status,
             url: url,
+            imagem: imagem,
             usuario_id: usuario_id,
             prioridade_id: prioridade_id,
-            file: formData,
           });
 
           if (response.data) {
@@ -102,7 +97,7 @@ const HomeScreen = () => {
         <input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="${desejo.nome}">
         <input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="${desejo.descricao}">
         <input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="${desejo.url}">
-        <input type="file" id="swal-file-input" class="swal2-file">
+        <input id="swal-input5" class="swal2-input" placeholder="Imagem" value="${desejo.imagem}">
         <div class="swal2-radio">
           <input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>
           <label for="radio-disponivel">Disponível</label>
@@ -122,11 +117,7 @@ const HomeScreen = () => {
         const description = document.getElementById('swal-edit-input2').value;
         const status = document.querySelector('input[name="status"]:checked').value;
         const url = document.getElementById('swal-edit-input4').value;
-        const fileInput = document.getElementById('swal-file-input');
-        const file = fileInput.files[0];
-
-        const formData = new FormData();
-        formData.append('file', file);
+        const imagem = document.getElementById('swal-input5').value;
 
         const updatedDesejo = {
           ...desejo,
@@ -134,9 +125,9 @@ const HomeScreen = () => {
           descricao: description,
           status,
           url,
+          imagem,
           usuario_id: 1,
           prioridade_id: 1,
-          file: formData,
         };
 
         try {
@@ -181,7 +172,7 @@ const HomeScreen = () => {
           <input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="${desejo.nome}">
           <input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="${desejo.descricao}">
           <input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="${desejo.url}">
-          <input type="file" id="swal-file-input" class="swal2-file">
+          <input id="swal-input5" class="swal2-input" placeholder="Imagem" value="${desejo.imagem}">
           <div class="swal2-radio">
             <input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>
             <label for="radio-disponivel">Disponível</label>
@@ -201,11 +192,7 @@ const HomeScreen = () => {
           const description = document.getElementById('swal-edit-input2').value;
           const status = document.querySelector('input[name="status"]:checked').value;
           const url = document.getElementById('swal-edit-input4').value;
-          const fileInput = document.getElementById('swal-file-input');
-          const file = fileInput.files[0];
-
-          const formData = new FormData();
-          formData.append('file', file);
+          const imagem = document.getElementById('swal-input5').value;
 
           const updatedDesejo = {
             ...desejo,
@@ -213,9 +200,9 @@ const HomeScreen = () => {
             descricao: description,
             status,
             url,
+            imagem,
             usuario_id: 1,
             prioridade_id: 1,
-            file: formData,
           };
 
           try {
