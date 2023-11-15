@@ -6,6 +6,7 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 import reservedImage from './homeImages/reservado3.png';
 
+
 import {
   AppContainer, MainContainer, CardsContainer, BackgroundImage, PolaroidBg, FadeInImage
 } from './HomeStyle';
@@ -48,16 +49,36 @@ const HomeScreen = () => {
         <div class="swal2-radio">
           <input type="radio" id="radio-disponivel" name="status" value="Disponível">
           <label for="radio-disponivel">Disponível</label>
+          <input type="radio" id="radio-reservado" name="status" value="Reservado">
           <label for="radio-reservado">Reservado</label>
+        </div>
+        <div class="swal2-radio">
+          <input type="radio" id="radio-1" name="prioridade" value="1">
+          <label for="radio-1">1</label>
+          <input type="radio" id="radio-2" name="prioridade" value="2">
+          <label for="radio-2">2</label>
+          <input type="radio" id="radio-3" name="prioridade" value="3">
+          <label for="radio-3">3</label>
+          <input type="radio" id="radio-4" name="prioridade" value="4">
+          <label for="radio-4">4</label>
+          <input type="radio" id="radio-5" name="prioridade" value="5">
+          <label for="radio-5">5</label>
         </div>
       `,
       focusConfirm: false,
       preConfirm: async () => {
         const name = document.getElementById('swal-input1').value;
         const description = document.getElementById('swal-input2').value;
-        const status = document.querySelector('input[name="status"]:checked').value;
+        const status = document.querySelector('input[name="status"]:checked');
         const url = document.getElementById('swal-input4').value;
         const imagem = document.getElementById('swal-input5').value;
+
+        if (!name || !description || !status || !url || !imagem) {
+          Swal.fire('Preencha todos os campos', '', 'warning');
+          return;
+        }
+
+        const statusValue = status.value;
 
         const usuario_id = 1;
         const prioridade_id = 1;
@@ -66,7 +87,7 @@ const HomeScreen = () => {
           const response = await axios.post('http://localhost:3001/desejos', {
             nome: name,
             descricao: description,
-            status: status,
+            status: statusValue,
             url: url,
             imagem: imagem,
             usuario_id: usuario_id,
@@ -87,10 +108,10 @@ const HomeScreen = () => {
     });
   };
 
-  const editDesejo = (desejo) => {
+  const EditDesejoModal = ({ desejo, fetchDesejos }) => {
     const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
     const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
-
+  
     Swal.fire({
       title: 'Editar Desejo',
       html: `
@@ -118,7 +139,7 @@ const HomeScreen = () => {
         const status = document.querySelector('input[name="status"]:checked').value;
         const url = document.getElementById('swal-edit-input4').value;
         const imagem = document.getElementById('swal-input5').value;
-
+  
         const updatedDesejo = {
           ...desejo,
           nome: name,
@@ -129,7 +150,7 @@ const HomeScreen = () => {
           usuario_id: 1,
           prioridade_id: 1,
         };
-
+  
         try {
           const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
           if (response.data) {
@@ -139,6 +160,10 @@ const HomeScreen = () => {
           console.error('Erro ao editar o desejo:', error);
         }
       },
+    }).then((result) => {
+      if (result.isDenied) {
+        removeDesejo(desejo.id);
+      }
     });
   };
 
@@ -162,63 +187,8 @@ const HomeScreen = () => {
   }, [])
 
   const DesejoCard = ({ desejo }) => {
-    const openEditModal = async () => {
-      const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
-      const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
-
-      Swal.fire({
-        title: 'Editar Desejo',
-        html: `
-          <input id="swal-edit-input1" class="swal2-input" placeholder="Nome" value="${desejo.nome}">
-          <input id="swal-edit-input2" class="swal2-input" placeholder="Descrição" value="${desejo.descricao}">
-          <input id="swal-edit-input4" class="swal2-input" placeholder="URL" value="${desejo.url}">
-          <input id="swal-input5" class="swal2-input" placeholder="Imagem" value="${desejo.imagem}">
-          <div class="swal2-radio">
-            <input type="radio" id="radio-disponivel" name="status" value="Disponível" ${statusDisponivelChecked}>
-            <label for="radio-disponivel">Disponível</label>
-            <input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>
-            <label for="radio-reservado">Reservado</label>
-          </div>
-        `,
-        focusConfirm: false,
-        showCancelButton: true,
-        showConfirmButton: true,
-        confirmButtonText: 'Salvar',
-        cancelButtonText: 'Cancelar',
-        showDenyButton: true,
-        denyButtonText: 'Excluir',
-        preConfirm: async () => {
-          const name = document.getElementById('swal-edit-input1').value;
-          const description = document.getElementById('swal-edit-input2').value;
-          const status = document.querySelector('input[name="status"]:checked').value;
-          const url = document.getElementById('swal-edit-input4').value;
-          const imagem = document.getElementById('swal-input5').value;
-
-          const updatedDesejo = {
-            ...desejo,
-            nome: name,
-            descricao: description,
-            status,
-            url,
-            imagem,
-            usuario_id: 1,
-            prioridade_id: 1,
-          };
-
-          try {
-            const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
-            if (response.data) {
-              fetchDesejos();
-            }
-          } catch (error) {
-            console.error('Erro ao editar o desejo:', error);
-          }
-        },
-      }).then((result) => {
-        if (result.isDenied) {
-          removeDesejo(desejo.id);
-        }
-      });
+    const openEditModal = () => {
+      EditDesejoModal({ desejo, fetchDesejos });
     };
 
     return (
@@ -238,7 +208,6 @@ const HomeScreen = () => {
               {desejo.nome}
             </Typography>
             <Typography variant="body2">{desejo.descricao}</Typography>
-
           </CardContent>
           {desejo.status === 'Reservado' && (
             <img
@@ -260,13 +229,14 @@ const HomeScreen = () => {
     );
   };
 
+
   return (
     <AppContainer>
       <Sidebar handleExitClick={handleExitClick} openModal={openModal} />
       <MainContainer>
         <CardsContainer>
           {desejos.map((desejo) => (
-            <DesejoCard key={desejo.id} desejo={desejo} editDesejo={editDesejo} />
+            <DesejoCard key={desejo.id} desejo={desejo} />
           ))}
         </CardsContainer>
       </MainContainer>
