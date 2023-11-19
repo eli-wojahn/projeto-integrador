@@ -17,7 +17,6 @@ import {
 
 const Sidebar = ({ handleExitClick }) => {
   const [prioridades, setPrioridades] = useState([]);
-  const [botaoAdicionarVisible, setBotaoAdicionarVisible] = useState(true);
 
   const fetchPrioridades = async () => {
     try {
@@ -25,18 +24,39 @@ const Sidebar = ({ handleExitClick }) => {
       const prioridadeData = response.data;
 
       setPrioridades(prioridadeData);
-
-      // Ocultar o botão após adicionar 5 prioridades
-      if (prioridadeData.length === 5) {
-        setBotaoAdicionarVisible(false);
-      }
     } catch (error) {
       console.error('Error fetching prioridade data:', error);
     }
   };
 
+  const createPrioridades = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/prioridades');
+      const prioridadeData = response.data;
+
+      if (prioridadeData.length === 0) {
+        for (let i = 1; i <= 5; i++) {
+          const novoNome = `Prioridade ${i}`;
+          const cor = corPorId[i];
+
+          await axios.post('http://localhost:3001/prioridades', {
+            nome: novoNome,
+            cor: cor,
+          });
+        }
+
+        const responseAtualizado = await axios.get('http://localhost:3001/prioridades');
+        const prioridadeDataAtualizado = responseAtualizado.data;
+        setPrioridades(prioridadeDataAtualizado);
+      }
+    } catch (error) {
+      console.error('Error fetching or creating prioridade data:', error);
+    }
+  };
+
   useEffect(() => {
     fetchPrioridades();
+    createPrioridades();
   }, []);
 
   const corPorId = {
@@ -45,27 +65,6 @@ const Sidebar = ({ handleExitClick }) => {
     3: 'green',
     4: 'purple',
     5: 'yellow',
-  };
-
-  const CreatePriority = async () => {
-    try {
-      const novoNumero = prioridades.length + 1;
-      const novoNome = `Prioridade ${novoNumero}`;
-  
-      const response = await axios.post('http://localhost:3001/prioridades', {
-        nome: novoNome,
-      });
-  
-      const createdPriority = response.data;
-      setPrioridades([...prioridades, createdPriority]);
-
-      // Ocultar o botão após adicionar 5 prioridades
-      if (prioridades.length + 1 === 5) {
-        setBotaoAdicionarVisible(false);
-      }
-    } catch (error) {
-      console.error('Error creating priority:', error);
-    }
   };
 
   const UpdatePriority = async (id, newName) => {
@@ -86,16 +85,12 @@ const Sidebar = ({ handleExitClick }) => {
     } catch (error) {
       console.error('Erro ao atualizar a prioridade:', error);
     }
-  };  
+  };
 
   return (
     <SidebarContainer>
       <Image src={images.polaroidImage} alt="Imagem" />
       <Button>Organizar</Button>
-
-      {botaoAdicionarVisible && (
-        <Button onClick={CreatePriority}>Adicionar Prioridade</Button>
-      )}
 
       {prioridades.map((prioridade, index) => (
         <PriorityContainer key={index}>
