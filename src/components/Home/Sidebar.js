@@ -19,7 +19,12 @@ const PriorityField = ({ id, initialValue }) => {
 
   const updatePriority = async () => {
     try {
-      await axios.put(`http://localhost:3001/prioridades/${id}`, { nome: text });
+      const usuario_id = 1; // Valor fixo para usuario_id
+
+      await axios.put(`http://localhost:3001/prioridades/${id}`, {
+        nome: text,
+        usuario_id: usuario_id, // Adicionando usuario_id
+      });
     } catch (error) {
       console.error('Erro ao atualizar a prioridade:', error);
     }
@@ -73,18 +78,21 @@ const Sidebar = ({ handleExitClick }) => {
     try {
       const response = await axios.get('http://localhost:3001/prioridades');
       const prioridadeData = response.data;
-
+  
       if (prioridadeData.length === 0) {
+        const usuario_id = 1; // Valor fixo para usuario_id
+  
         for (let i = 1; i <= 5; i++) {
           const novoNome = `Prioridade ${i}`;
           const cor = corPorId[i];
-
+  
           await axios.post('http://localhost:3001/prioridades', {
             nome: novoNome,
             cor: cor,
+            usuario_id: usuario_id, // Adicionando usuario_id
           });
         }
-
+  
         const responseAtualizado = await axios.get('http://localhost:3001/prioridades');
         const prioridadeDataAtualizado = responseAtualizado.data;
         setPrioridades(prioridadeDataAtualizado);
