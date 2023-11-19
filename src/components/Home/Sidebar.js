@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as images from './Images';
 
-import PriorityField from './PriorityField';
 import {
   SidebarContainer,
   Image,
@@ -14,6 +13,47 @@ import {
   ButtonRow,
   ImageIcons
 } from './HomeStyle';
+
+const PriorityField = ({ id, initialValue }) => {
+  const [text, setText] = useState(initialValue);
+
+  const updatePriority = async () => {
+    try {
+      await axios.put(`http://localhost:3001/prioridades/${id}`, { nome: text });
+    } catch (error) {
+      console.error('Erro ao atualizar a prioridade:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (initialValue !== text) {
+      updatePriority();
+    }
+  }, [initialValue, text, id]);
+
+  return (
+    <input
+      type="text"
+      value={text}
+      onChange={(e) => {
+        if (e.target.value.length <= 14) {
+          setText(e.target.value);
+        }
+      }}
+      onBlur={updatePriority}
+      maxLength={14}
+      title="Customize aqui o nome da prioridade"
+      style={{
+        backgroundColor: '#f0f0f0',
+        border: 'none',
+        outline: 'none',
+        width: '100%',
+        fontSize: '16px',
+        padding: '5px',
+      }}
+    />
+  );
+};
 
 const Sidebar = ({ handleExitClick }) => {
   const [prioridades, setPrioridades] = useState([]);
@@ -57,6 +97,7 @@ const Sidebar = ({ handleExitClick }) => {
   useEffect(() => {
     fetchPrioridades();
     createPrioridades();
+    // eslint-disable-next-line
   }, []);
 
   const corPorId = {
@@ -67,26 +108,6 @@ const Sidebar = ({ handleExitClick }) => {
     5: 'yellow',
   };
 
-  const UpdatePriority = async (id, newName) => {
-    try {
-      console.log('Estado de prioridades antes do update:', prioridades);
-
-      await axios.put(`http://localhost:3001/prioridades/${id}`, {
-        nome: newName,
-      });
-
-      const updatedPriorities = prioridades.map((priority) =>
-        priority.id === id ? { ...priority, nome: newName } : priority
-      );
-
-      setPrioridades(updatedPriorities);
-
-      console.log('Estado de prioridades após o update:', updatedPriorities);
-    } catch (error) {
-      console.error('Erro ao atualizar a prioridade:', error);
-    }
-  };
-
   return (
     <SidebarContainer>
       <Image src={images.polaroidImage} alt="Imagem" />
@@ -95,10 +116,7 @@ const Sidebar = ({ handleExitClick }) => {
       {prioridades.map((prioridade, index) => (
         <PriorityContainer key={index}>
           <ImagePins src={images[`pin_${corPorId[prioridade.id]}`]} alt="Imagem" />
-          <PriorityField
-            initialValue={`${prioridade.nome}`}
-            onUpdate={(newName) => UpdatePriority(prioridade.id, newName)}
-          />
+          <PriorityField id={prioridade.id} initialValue={`${prioridade.nome}`} />
         </PriorityContainer>
       ))}
 
