@@ -17,6 +17,7 @@ import {
 
 const Sidebar = ({ handleExitClick }) => {
   const [prioridades, setPrioridades] = useState([]);
+  const [botaoAdicionarVisible, setBotaoAdicionarVisible] = useState(true);
 
   const fetchPrioridades = async () => {
     try {
@@ -24,6 +25,11 @@ const Sidebar = ({ handleExitClick }) => {
       const prioridadeData = response.data;
 
       setPrioridades(prioridadeData);
+
+      // Ocultar o botão após adicionar 5 prioridades
+      if (prioridadeData.length === 5) {
+        setBotaoAdicionarVisible(false);
+      }
     } catch (error) {
       console.error('Error fetching prioridade data:', error);
     }
@@ -43,12 +49,20 @@ const Sidebar = ({ handleExitClick }) => {
 
   const CreatePriority = async () => {
     try {
+      const novoNumero = prioridades.length + 1;
+      const novoNome = `Prioridade ${novoNumero}`;
+  
       const response = await axios.post('http://localhost:3001/prioridades', {
-        nome: 'Prioridade',
+        nome: novoNome,
       });
-
+  
       const createdPriority = response.data;
       setPrioridades([...prioridades, createdPriority]);
+
+      // Ocultar o botão após adicionar 5 prioridades
+      if (prioridades.length + 1 === 5) {
+        setBotaoAdicionarVisible(false);
+      }
     } catch (error) {
       console.error('Error creating priority:', error);
     }
@@ -56,6 +70,8 @@ const Sidebar = ({ handleExitClick }) => {
 
   const UpdatePriority = async (id, newName) => {
     try {
+      console.log('Estado de prioridades antes do update:', prioridades);
+
       await axios.put(`http://localhost:3001/prioridades/${id}`, {
         nome: newName,
       });
@@ -65,22 +81,27 @@ const Sidebar = ({ handleExitClick }) => {
       );
 
       setPrioridades(updatedPriorities);
+
+      console.log('Estado de prioridades após o update:', updatedPriorities);
     } catch (error) {
-      console.error('Error updating priority:', error);
+      console.error('Erro ao atualizar a prioridade:', error);
     }
-  };
+  };  
 
   return (
     <SidebarContainer>
       <Image src={images.polaroidImage} alt="Imagem" />
       <Button>Organizar</Button>
 
-      <Button onClick={CreatePriority}>Adicionar Prioridade</Button>
+      {botaoAdicionarVisible && (
+        <Button onClick={CreatePriority}>Adicionar Prioridade</Button>
+      )}
+
       {prioridades.map((prioridade, index) => (
         <PriorityContainer key={index}>
           <ImagePins src={images[`pin_${corPorId[prioridade.id]}`]} alt="Imagem" />
           <PriorityField
-            initialValue={`${prioridade.nome} ${prioridade.id}`}
+            initialValue={`${prioridade.nome}`}
             onUpdate={(newName) => UpdatePriority(prioridade.id, newName)}
           />
         </PriorityContainer>
