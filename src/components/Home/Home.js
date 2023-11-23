@@ -192,7 +192,7 @@ const HomeScreen = () => {
     };
 
     return (
-      <Card onClick={openEditModal} style={{ marginLeft: '35px', position: 'relative' }}>
+      <Card onClick={openEditModal} style={{ marginLeft: '35px', position: 'relative', marginBottom: '25px' }}>
         <CardActionArea style={{ position: 'relative' }}>
           <CardContent style={{ position: 'relative', zIndex: 1 }}>
             <PolaroidBg>

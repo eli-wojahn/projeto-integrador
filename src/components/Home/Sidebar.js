@@ -34,7 +34,9 @@ const PriorityField = ({ id, initialValue }) => {
     if (initialValue !== text) {
       updatePriority();
     }
-  }, [initialValue, text, id]);
+  }, 
+  // eslint-disable-next-line
+  [initialValue, text, id]);
 
   return (
     <input
