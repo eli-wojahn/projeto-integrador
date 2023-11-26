@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import * as images from './Images';
 
@@ -13,6 +13,8 @@ import {
   ButtonRow,
   ImageIcons
 } from './HomeStyle';
+
+import UserContext from '../Contexts/UserContext';
 
 const PriorityField = ({ id, initialValue }) => {
   const [text, setText] = useState(initialValue);
@@ -34,9 +36,9 @@ const PriorityField = ({ id, initialValue }) => {
     if (initialValue !== text) {
       updatePriority();
     }
-  }, 
-  // eslint-disable-next-line
-  [initialValue, text, id]);
+  },
+    // eslint-disable-next-line
+    [initialValue, text, id]);
 
   return (
     <input
@@ -65,6 +67,8 @@ const PriorityField = ({ id, initialValue }) => {
 const Sidebar = ({ handleExitClick }) => {
   const [prioridades, setPrioridades] = useState([]);
 
+  const { nome: user } = useContext(UserContext);
+
   const fetchPrioridades = async () => {
     try {
       const response = await axios.get('http://localhost:3001/prioridades');
@@ -80,21 +84,21 @@ const Sidebar = ({ handleExitClick }) => {
     try {
       const response = await axios.get('http://localhost:3001/prioridades');
       const prioridadeData = response.data;
-  
+
       if (prioridadeData.length === 0) {
         const usuario_id = 1; // Valor fixo para usuario_id
-  
+
         for (let i = 1; i <= 5; i++) {
           const novoNome = `Prioridade ${i}`;
           const cor = corPorId[i];
-  
+
           await axios.post('http://localhost:3001/prioridades', {
             nome: novoNome,
             cor: cor,
             usuario_id: usuario_id, // Adicionando usuario_id
           });
         }
-  
+
         const responseAtualizado = await axios.get('http://localhost:3001/prioridades');
         const prioridadeDataAtualizado = responseAtualizado.data;
         setPrioridades(prioridadeDataAtualizado);
@@ -118,11 +122,14 @@ const Sidebar = ({ handleExitClick }) => {
     5: 'yellow',
   };
 
+
+
+
   return (
     <SidebarContainer>
       <Image src={images.polaroidImage} alt="Imagem" />
       <Button>Organizar</Button>
-
+      <p>{user}</p>
       {prioridades.map((prioridade, index) => (
         <PriorityContainer key={index}>
           <ImagePins src={images[`pin_${corPorId[prioridade.id]}`]} alt="Imagem" />

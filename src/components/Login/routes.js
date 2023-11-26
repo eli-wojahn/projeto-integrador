@@ -4,7 +4,6 @@ import LoginScreen from './Login.js';
 import CreateAccountScreen from '../CreateLogin/CreateLogin.js';
 import HomeScreen from '../Home/Home.js';
 
-
 const AppRouter = () => {
   return (
     <Router>
