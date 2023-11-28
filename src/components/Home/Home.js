@@ -19,6 +19,31 @@ const HomeScreen = () => {
   const navigate = useNavigate();
   const [desejos, setDesejos] = useState([]);
 
+  const apikey = '3a55eda8d68143a4a5116c1051638b0d';
+  const shortenUrl = async (url) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3001/shorten-url',
+        {
+          destination: url,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': apikey,
+          },
+        }
+      );
+
+      const shortUrl = response.data.shortUrl;
+      return shortUrl;
+    } catch (error) {
+      console.error('Erro ao encurtar URL:', error);
+      throw error;
+    }
+  };
+
+  
   const fetchDesejos = async () => {
     try {
       const response = await axios.get('http://localhost:3001/desejos');
@@ -67,36 +92,49 @@ const HomeScreen = () => {
       `,
       focusConfirm: false,
       preConfirm: async () => {
-        const name = document.getElementById('swal-input1').value;
-        const description = document.getElementById('swal-input2').value;
-        const status = document.querySelector('input[name="status"]:checked');
         const url = document.getElementById('swal-input4').value;
-        const imagem = document.getElementById('swal-input5').value;
-
-        if (!name || !description || !status || !url || !imagem) {
-          Swal.fire('Preencha todos os campos', '', 'warning');
-          return;
-        }
-
-        const statusValue = status.value;
-
-        const usuario_id = 1;
-        const prioridade_id = 1;
 
         try {
+          const shortUrl = await shortenUrl(url);
+          const name = document.getElementById('swal-input1').value;
+          const description = document.getElementById('swal-input2').value;
+          const status = document.querySelector('input[name="status"]:checked');
+          // const url = document.getElementById('swal-input4').value;
+          const imagem = document.getElementById('swal-input5').value;
+
+          if (!name || !description || !status || !url || !imagem) {
+            Swal.fire('Preencha todos os campos', '', 'warning');
+            return;
+          }
+
+          const statusValue = status.value;
+          const usuario_id = 1;
+          const prioridade_id = 1;
+
           const response = await axios.post('http://localhost:3001/desejos', {
             nome: name,
             descricao: description,
             status: statusValue,
-            url: url,
+            url: shortUrl,
             imagem: imagem,
             usuario_id: usuario_id,
             prioridade_id: prioridade_id,
           });
 
-          if (response.data) {
+          console.log(response.status)
+          // console.log('Headers da resposta:', response.headers);
+          // console.log('Dados da resposta:', response.data);
+
+          if (response.status === 200 || response.status === 201) {
             console.log('Desejo criado:', response.data);
             setDesejos([...desejos, response.data]);
+          } else {
+            Swal.fire({
+              icon: 'info',
+              title: 'Só o proprietário do desejo pode cadastrar',
+              showConfirmButton: false,
+              timer: 1500
+            })
           }
         } catch (error) {
           console.error('Erro ao criar o desejo:', error);
@@ -111,7 +149,7 @@ const HomeScreen = () => {
   const EditDesejoModal = ({ desejo, fetchDesejos }) => {
     const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
     const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
-  
+
     Swal.fire({
       title: 'Editar Desejo',
       html: `
@@ -139,7 +177,7 @@ const HomeScreen = () => {
         const status = document.querySelector('input[name="status"]:checked').value;
         const url = document.getElementById('swal-edit-input4').value;
         const imagem = document.getElementById('swal-input5').value;
-  
+
         const updatedDesejo = {
           ...desejo,
           nome: name,
@@ -150,7 +188,7 @@ const HomeScreen = () => {
           usuario_id: 1,
           prioridade_id: 1,
         };
-  
+
         try {
           const response = await axios.put(`http://localhost:3001/desejos/${desejo.id}`, updatedDesejo);
           if (response.data) {

@@ -57,6 +57,34 @@ const LoginScreen = () => {
     }
   };
 
+ /*  const handleLoginClick = async (data) => {
+    const emailPattern = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$/;
+  
+    if (!email.match(emailPattern)) {
+      console.error('Invalid email');
+      Swal.fire('Erro', 'Digite um e-mail válido', 'error');
+      return;
+    }
+  
+    const response = await fetch("http://localhost:3001/login",
+      {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({ email: data.email, senha: data.senha })
+      },
+    )
+  
+    if (response.status == 401) {
+      Swal.fire('Erro', 'Houve um erro ao realizar o login. Por favor, tente novamente.', 'error');
+    } else {
+      Swal.fire('Sucesso', 'Login realizado com sucesso', 'success');
+      const usuario = await response.json()
+      console.log(usuario)
+      localStorage.setItem("Usuário_logado", JSON.stringify({ id: usuario.id, nome: usuario.nome }))
+      navigate('/home');
+    }
+  } */
+
   return (
     <Container>
       <Row>
