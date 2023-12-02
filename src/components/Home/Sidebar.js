@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import * as images from './Images';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 import {
   SidebarContainer,
@@ -36,9 +38,7 @@ const PriorityField = ({ id, initialValue }) => {
     if (initialValue !== text) {
       updatePriority();
     }
-  },
-    // eslint-disable-next-line
-    [initialValue, text, id]);
+  }, [initialValue, text, id]);
 
   return (
     <input
@@ -111,7 +111,6 @@ const Sidebar = ({ handleExitClick }) => {
   useEffect(() => {
     fetchPrioridades();
     createPrioridades();
-    // eslint-disable-next-line
   }, []);
 
   const corPorId = {
@@ -122,8 +121,38 @@ const Sidebar = ({ handleExitClick }) => {
     5: 'yellow',
   };
 
+  const showShare1Modal = () => {
+    Swal.fire({
+      title: 'Compartilhe o link de sua lista',
+      html: '<a href="http://localhost:3000/minha-lista" target="_blank" rel="noopener noreferrer"><strong>http://localhost:3000/minha-lista</strong></a>', // Substitua pelo link real quando disponível
+      icon: 'info',
+    });
+  };
 
-
+  const showShare2Modal = () => {
+    Swal.fire({
+      title: 'Compartilhe sua lista nas redes sociais',
+      html: `
+        <div>
+          <div>
+            <a href="https://api.whatsapp.com/send?text=www.exemplo.com.br" target="_blank" rel="noopener noreferrer">
+              <img src="https://www.unipile.com/wp-content/uploads/2022/02/xicone-logo-whatsapp-vert.png.pagespeed.ic.GpT05ETuy7.png" alt="WhatsApp" style="width: 30px; height: 30px; margin-right: 10px;" />
+            </a>
+            <a href="https://www.instagram.com/?url=www.exemplo.com.br" target="_blank" rel="noopener noreferrer">
+              <img src="https://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png" style="width: 30px; height: 30px; margin-right: 10px;" />
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=www.exemplo.com.br" target="_blank" rel="noopener noreferrer">
+              <img src="https://static.vecteezy.com/system/resources/previews/018/930/476/non_2x/facebook-logo-facebook-icon-transparent-free-png.png" alt="Facebook" style="width: 30px; height: 30px; margin-right: 10px;" />
+            </a>
+            <a href="mailto:?subject=Compartilhar%20Lista&body=www.exemplo.com.br" target="_blank" rel="noopener noreferrer">
+              <img src="https://static.vecteezy.com/system/resources/previews/016/716/465/non_2x/gmail-icon-free-png.png" alt="Gmail" style="width: 30px; height: 30px;" />
+            </a>
+          </div>
+        </div>
+      `,
+      icon: 'info',
+    });
+  };
 
   return (
     <SidebarContainer>
@@ -139,10 +168,10 @@ const Sidebar = ({ handleExitClick }) => {
 
       <ButtonsContainer style={{ marginTop: 'auto' }}>
         <ButtonRow>
-          <IconButton>
+          <IconButton onClick={showShare1Modal}>
             <ImageIcons src={images.share1} alt="share" />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={showShare2Modal}>
             <ImageIcons src={images.share2} alt="share" />
           </IconButton>
         </ButtonRow>

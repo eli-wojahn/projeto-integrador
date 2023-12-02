@@ -44,7 +44,7 @@ const LoginScreen = () => {
 
       if (response.status === 200 && response.data.msg === 'Usuário logado') {
 
-        localStorage.setItem("Usuário_logado", JSON.stringify({nome: 'teste'}));
+        localStorage.setItem("Usuário_logado", JSON.stringify({nome: 'Teste User'}));
 
         Swal.fire('Sucesso', 'Login realizado com sucesso', 'success');
         navigate('/home');
