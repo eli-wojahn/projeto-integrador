@@ -38,6 +38,7 @@ const PriorityField = ({ id, initialValue }) => {
     if (initialValue !== text) {
       updatePriority();
     }
+    // eslint-disable-next-line
   }, [initialValue, text, id]);
 
   return (
@@ -111,6 +112,7 @@ const Sidebar = ({ handleExitClick }) => {
   useEffect(() => {
     fetchPrioridades();
     createPrioridades();
+    // eslint-disable-next-line
   }, []);
 
   const corPorId = {

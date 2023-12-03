@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import Sidebar from './Sidebar';
 import reservedImage from './homeImages/reservado3.png';
+import Draggable from 'react-draggable';
 
 
 import {
@@ -229,6 +230,7 @@ const HomeScreen = () => {
     };
 
     return (
+      <Draggable>
       <Card onClick={openEditModal} style={{ marginLeft: '35px', position: 'relative', marginBottom: '25px' }}>
         <CardActionArea style={{ position: 'relative' }}>
           <CardContent style={{ position: 'relative', zIndex: 1 }}>
@@ -263,6 +265,7 @@ const HomeScreen = () => {
           )}
         </CardActionArea>
       </Card>
+      </Draggable>
     );
   };
 
