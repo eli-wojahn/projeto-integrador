@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import * as images from './Images';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -16,7 +17,7 @@ import {
   ImageIcons
 } from './HomeStyle';
 
-import UserContext from '../Contexts/UserContext';
+import UsuarioContext from '../Contexts/Usuario.js';
 
 const PriorityField = ({ id, initialValue }) => {
   const [text, setText] = useState(initialValue);
@@ -65,10 +66,29 @@ const PriorityField = ({ id, initialValue }) => {
   );
 };
 
-const Sidebar = ({ handleExitClick }) => {
+const Sidebar = ({ logout }) => {
+  const { userNome, mudaId, mudaNome } = useContext(UsuarioContext)
   const [prioridades, setPrioridades] = useState([]);
+  const navigate = useNavigate();
 
-  const { nome: user } = useContext(UserContext);
+  function logout() {
+    Swal.fire({
+      title: "Confirma saída da página?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim!",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mudaId(null)
+        mudaNome("")
+        localStorage.removeItem("cliente_logado")
+        navigate('/');
+      }
+    });
+  }
 
   const fetchPrioridades = async () => {
     try {
@@ -137,8 +157,8 @@ const Sidebar = ({ handleExitClick }) => {
       showConfirmButton: false,
     });
   };
-  
-  
+
+
 
   const showShare2Modal = () => {
     Swal.fire({
@@ -174,7 +194,7 @@ const Sidebar = ({ handleExitClick }) => {
     <SidebarContainer>
       <Image src={images.polaroidImage} alt="Imagem" />
       <Button>Organizar</Button>
-      <p>{user}</p>
+      <p>{userNome}</p>
       {prioridades.map((prioridade, index) => (
         <PriorityContainer key={index}>
           <ImagePins src={images[`pin_${corPorId[prioridade.id]}`]} alt="Imagem" />
@@ -198,7 +218,7 @@ const Sidebar = ({ handleExitClick }) => {
           <IconButton>
             <ImageIcons
               src={images.exit}
-              onClick={handleExitClick}
+              onClick={logout}
               alt="exit"
               style={{ width: '50px' }}
             />

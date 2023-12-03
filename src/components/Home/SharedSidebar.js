@@ -14,7 +14,7 @@ import {
   ImageIcons
 } from './HomeStyle';
 
-import UserContext from '../Contexts/UserContext';
+import UsuarioContext from '../Contexts/Usuario.js';
 
 const PriorityField = ({ initialValue }) => {
   return (
@@ -37,7 +37,7 @@ const PriorityField = ({ initialValue }) => {
 const SharedSidebar = ({ handleExitClick }) => {
   const [prioridades, setPrioridades] = useState([]);
 
-  const { nome: user } = useContext(UserContext);
+  const { userNome } = useContext(UsuarioContext)
 
   const fetchPrioridades = async () => {
     try {
@@ -96,7 +96,7 @@ const SharedSidebar = ({ handleExitClick }) => {
     <SidebarContainer>
       <Image src={images.polaroidImage} alt="Imagem" />
       <h5 style={{marginTop: "25px"}}>Bem-vindo à lista de desejos de:</h5>
-      <p>{user}</p>
+      <p>{userNome}</p>
       {prioridades.map((prioridade, index) => (
         <PriorityContainer key={index}>
           <ImagePins src={images[`pin_${corPorId[prioridade.id]}`]} alt="Imagem" />

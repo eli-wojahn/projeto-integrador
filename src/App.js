@@ -1,13 +1,13 @@
 import React from 'react';
 import AppRouter from './components/Login/routes.js';
-import { UserProvider } from './components/Contexts/UserContext.js';
+import { UsuarioProvider } from './components/Contexts/Usuario.js';
 
 function App() {
   return (
     <div className="App">
-      <UserProvider>
+      <UsuarioProvider>
         <AppRouter />
-      </UserProvider>
+      </UsuarioProvider>
     </div>
   );
 }

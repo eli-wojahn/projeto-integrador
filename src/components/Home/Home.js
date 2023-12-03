@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import Sidebar from './Sidebar';
@@ -17,7 +16,6 @@ import { Card, CardActionArea, CardContent, Fab, Typography, } from '@mui/materi
 import AddIcon from '@mui/icons-material/Add';
 
 const HomeScreen = () => {
-  const navigate = useNavigate();
   const [desejos, setDesejos] = useState([]);
 
   const apikey = '3a55eda8d68143a4a5116c1051638b0d';
@@ -44,7 +42,7 @@ const HomeScreen = () => {
     }
   };
 
-  
+
   const fetchDesejos = async () => {
     try {
       const response = await axios.get('http://localhost:3001/desejos');
@@ -59,10 +57,6 @@ const HomeScreen = () => {
   useEffect(() => {
     fetchDesejos();
   }, []);
-
-  const handleExitClick = () => {
-    navigate('/');
-  };
 
   const openModal = () => {
     Swal.fire({
@@ -231,40 +225,42 @@ const HomeScreen = () => {
 
     return (
       <Draggable>
-      <Card onClick={openEditModal} style={{ marginLeft: '35px', position: 'relative', marginBottom: '25px' }}>
-        <CardActionArea style={{ position: 'relative' }}>
-          <CardContent style={{ position: 'relative', zIndex: 1 }}>
-            <PolaroidBg>
-              {desejo.imagem && (
-                <FadeInImage
-                  src={`${desejo.imagem}`}
-                  alt="Desejo Image"
-                  className="fade-in-image"
-                />
-              )}
-            </PolaroidBg>
-            <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-              {desejo.nome}
-            </Typography>
-            <Typography variant="body2">{desejo.descricao}</Typography>
-          </CardContent>
-          {desejo.status === 'Reservado' && (
-            <img
-              src={reservedImage}
-              alt="Reservado"
-              style={{
-                position: 'absolute',
-                top: -5,
-                left: 18,
-                width: '95%',
-                height: '95%',
-                objectFit: 'cover',
-                zIndex: 2,
-              }}
-            />
-          )}
-        </CardActionArea>
-      </Card>
+        <Card style={{ marginLeft: '35px', position: 'relative', marginBottom: '25px' }}>
+          <CardActionArea style={{ position: 'relative' }}>
+            <CardContent style={{ position: 'relative', zIndex: 1 }}>
+              <PolaroidBg>
+                {desejo.imagem && (
+                  <div onClick={openEditModal}>
+                    <FadeInImage
+                      src={`${desejo.imagem}`}
+                      alt="Desejo Image"
+                      className="fade-in-image"
+                    />
+                  </div>
+                )}
+              </PolaroidBg>
+              <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                {desejo.nome}
+              </Typography>
+              <Typography variant="body2">{desejo.descricao}</Typography>
+            </CardContent>
+            {desejo.status === 'Reservado' && (
+              <img
+                src={reservedImage}
+                alt="Reservado"
+                style={{
+                  position: 'absolute',
+                  top: -5,
+                  left: 18,
+                  width: '95%',
+                  height: '95%',
+                  objectFit: 'cover',
+                  zIndex: 2,
+                }}
+              />
+            )}
+          </CardActionArea>
+        </Card>
       </Draggable>
     );
   };
@@ -272,7 +268,7 @@ const HomeScreen = () => {
 
   return (
     <AppContainer>
-      <Sidebar handleExitClick={handleExitClick} openModal={openModal} />
+      <Sidebar openModal={openModal} />
       <MainContainer>
         <CardsContainer>
           {desejos.map((desejo) => (
