@@ -26,36 +26,49 @@ const LoginScreen = () => {
     setPassword(event.target.value);
   };
 
-  // const handleLoginClick = async () => {
-  //   const emailPattern = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$/;
-
-  //   if (!email.match(emailPattern)) {
-  //     console.error('Invalid email');
-  //     Swal.fire('Erro', 'Digite um e-mail válido', 'error');
-  //     return;
-  //   }
-
   async function verificaLogin() {
-
-    const userData = {
-      email: email,
-      senha: password
-    };
-
-    const response = await axios.post('http://localhost:3001/login', userData);
-
-    if (response.status === 401) {
-      Swal.fire('Erro', 'Usuário não cadastrado.', 'error');
-    } else {
-      // console.log('Usuário do response.data:', response.data);
-      mudaId(response.data.id)
-      mudaNome(response.data.nome)
-      localStorage.setItem("cliente_logado", JSON.stringify({ id: response.data.id, nome: response.data.nome }))
-      Swal.fire('Sucesso', 'Login realizado com sucesso', 'success');
-      navigate('/home');
+    const emailPattern = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$/;
+  
+    if (!email.match(emailPattern)) {
+      console.error('Invalid email');
+      Swal.fire('Erro', 'Digite um e-mail válido', 'error');
+      return;
+    }
+  
+    try {
+      const userData = {
+        email,
+        senha: password
+      };
+  
+      const response = await axios.post('http://localhost:3001/login', userData);
+  
+      if (response.status === 200 && response.data.msg === 'Usuário logado') {
+        const { id, nome } = response.data;
+  
+        mudaId(id);
+        mudaNome(nome);
+        localStorage.setItem("cliente_logado", JSON.stringify({ id, nome }));
+  
+        Swal.fire('Sucesso', 'Login realizado com sucesso', 'success');
+        navigate('/home');
+      } else {
+        Swal.fire('Erro', 'Houve um erro ao realizar o login. Por favor, tente novamente.', 'error');
+      }
+    } catch (error) {
+      console.error('Erro ao realizar o login:', error);
+  
+      if (error.response && error.response.status === 401) {
+        Swal.fire('Erro', 'Usuário não cadastrado.', 'error');
+      } else {
+        Swal.fire('Erro', 'Houve um erro ao realizar o login. Por favor, tente novamente.', 'error');
+      }
     }
   }
-  // };
+
+
+
+
 
   return (
     <Container>
