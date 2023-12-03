@@ -3,14 +3,14 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import Sidebar from './Sidebar';
+import SharedSidebar from './SharedSidebar';
 import reservedImage from './homeImages/reservado3.png';
 
 import {
   AppContainer, MainContainer, CardsContainer, BackgroundImage, PolaroidBg, FadeInImage
 } from './HomeStyle';
 
-import { Card, CardActionArea, CardContent, Fab, Typography, } from '@mui/material';
+import { Card, CardActionArea, CardContent, Typography, } from '@mui/material';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
@@ -96,7 +96,7 @@ const HomeScreen = () => {
 
   return (
     <AppContainer>
-      <Sidebar handleExitClick={handleExitClick} />
+      <SharedSidebar handleExitClick={handleExitClick} />
       <MainContainer>
         <CardsContainer>
           {desejos.map((desejo) => (
@@ -109,4 +109,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default HomeScreen;  

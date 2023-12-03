@@ -123,15 +123,30 @@ const Sidebar = ({ handleExitClick }) => {
 
   const showShare1Modal = () => {
     Swal.fire({
-      title: 'Compartilhe o link de sua lista',
-      html: '<a href="http://localhost:3000/minha-lista" target="_blank" rel="noopener noreferrer"><strong>http://localhost:3000/minha-lista</strong></a>', // Substitua pelo link real quando disponível
-      icon: 'info',
+      title: `
+        <div style="text-align: center;">
+          <img src="https://www.creativefabrica.com/wp-content/uploads/2021/08/23/Polaroid-frame-photo-template-design-Graphics-16251396-2-580x386.png" alt="Custom Image" style="  max-width: 100%; max-height: 100%; margin-bottom: 2px;" />
+          <div>
+            Compartilhe o link de sua lista
+          </div>
+        </div>`,
+      html: '<a href="http://localhost:3000/minha-lista" target="_blank" rel="noopener noreferrer"><strong>http://localhost:3000/minha-lista</strong></a>',
+      showCloseButton: true,
+      showConfirmButton: false,
     });
   };
+  
+  
 
   const showShare2Modal = () => {
     Swal.fire({
-      title: 'Compartilhe sua lista nas redes sociais',
+      title: `
+        <div style="text-align: center;">
+          <img src="https://www.creativefabrica.com/wp-content/uploads/2021/08/23/Polaroid-frame-photo-template-design-Graphics-16251396-2-580x386.png" alt="Custom Image" style="  max-width: 100%; max-height: 100%; margin-bottom: 2px;" />
+          <div>
+            Compartilhe seu link nas redes sociais
+          </div>
+        </div>`,
       html: `
         <div>
           <div>
@@ -150,7 +165,6 @@ const Sidebar = ({ handleExitClick }) => {
           </div>
         </div>
       `,
-      icon: 'info',
     });
   };
 

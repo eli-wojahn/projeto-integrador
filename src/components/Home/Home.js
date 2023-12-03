@@ -99,7 +99,6 @@ const HomeScreen = () => {
           const name = document.getElementById('swal-input1').value;
           const description = document.getElementById('swal-input2').value;
           const status = document.querySelector('input[name="status"]:checked');
-          // const url = document.getElementById('swal-input4').value;
           const imagem = document.getElementById('swal-input5').value;
 
           if (!name || !description || !status || !url || !imagem) {
