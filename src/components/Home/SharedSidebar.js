@@ -19,7 +19,6 @@ import UsuarioContext from '../Contexts/Usuario.js';
 const PriorityField = ({ initialValue }) => {
   return (
     <div
-      title="Customize aqui o nome da prioridade"
       style={{
         backgroundColor: '#f0f0f0',
         padding: '5px',
@@ -37,7 +36,7 @@ const PriorityField = ({ initialValue }) => {
 const SharedSidebar = ({ handleExitClick }) => {
   const [prioridades, setPrioridades] = useState([]);
 
-  const { userNome } = useContext(UsuarioContext)
+  const { userNome, userId } = useContext(UsuarioContext)
 
   const fetchPrioridades = async () => {
     try {
@@ -56,7 +55,7 @@ const SharedSidebar = ({ handleExitClick }) => {
       const prioridadeData = response.data;
 
       if (prioridadeData.length === 0) {
-        const usuario_id = 1; // Valor fixo para usuario_id
+        const usuario_id = userId;
 
         for (let i = 1; i <= 5; i++) {
           const novoNome = `Prioridade ${i}`;
@@ -65,7 +64,7 @@ const SharedSidebar = ({ handleExitClick }) => {
           await axios.post('http://localhost:3001/prioridades', {
             nome: novoNome,
             cor: cor,
-            usuario_id: usuario_id, // Adicionando usuario_id
+            usuario_id,
           });
         }
 

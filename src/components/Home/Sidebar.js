@@ -21,14 +21,15 @@ import UsuarioContext from '../Contexts/Usuario.js';
 
 const PriorityField = ({ id, initialValue }) => {
   const [text, setText] = useState(initialValue);
+  const { userId } = useContext(UsuarioContext);
 
   const updatePriority = async () => {
     try {
-      const usuario_id = 1; // Valor fixo para usuario_id
+      const usuario_id = userId;
 
       await axios.put(`http://localhost:3001/prioridades/${id}`, {
         nome: text,
-        usuario_id: usuario_id, // Adicionando usuario_id
+        usuario_id,
       });
     } catch (error) {
       console.error('Erro ao atualizar a prioridade:', error);
@@ -67,7 +68,7 @@ const PriorityField = ({ id, initialValue }) => {
 };
 
 const Sidebar = ({ logout }) => {
-  const { userNome, mudaId, mudaNome } = useContext(UsuarioContext)
+  const { userNome, userId, mudaId, mudaNome } = useContext(UsuarioContext)
   const [prioridades, setPrioridades] = useState([]);
   const navigate = useNavigate();
 
@@ -107,7 +108,7 @@ const Sidebar = ({ logout }) => {
       const prioridadeData = response.data;
 
       if (prioridadeData.length === 0) {
-        const usuario_id = 1; // Valor fixo para usuario_id
+        const usuario_id = userId;
 
         for (let i = 1; i <= 5; i++) {
           const novoNome = `Prioridade ${i}`;
@@ -116,7 +117,7 @@ const Sidebar = ({ logout }) => {
           await axios.post('http://localhost:3001/prioridades', {
             nome: novoNome,
             cor: cor,
-            usuario_id: usuario_id, // Adicionando usuario_id
+            usuario_id,
           });
         }
 
@@ -190,6 +191,11 @@ const Sidebar = ({ logout }) => {
     });
   };
 
+  /*   const organizar = () => {
+  
+      window.location.reload();
+    }; */
+
   return (
     <SidebarContainer>
       <Image src={images.polaroidImage} alt="Imagem" />
@@ -197,7 +203,9 @@ const Sidebar = ({ logout }) => {
       <p>{userNome}</p>
       {prioridades.map((prioridade, index) => (
         <PriorityContainer key={index}>
-          <ImagePins src={images[`pin_${corPorId[prioridade.id]}`]} alt="Imagem" />
+          <ImagePins src={images[`pin_${corPorId[prioridade.id]}`]} alt="Imagem" style={{
+            width: '40px',
+          }} />
           <PriorityField id={prioridade.id} initialValue={`${prioridade.nome}`} />
         </PriorityContainer>
       ))}

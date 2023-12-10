@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-
+import UsuarioContext from '../Contexts/Usuario.js';
 import Sidebar from './Sidebar';
 import reservedImage from './homeImages/reservado3.png';
 import Draggable from 'react-draggable';
+import { pin_red, pin_blue, pin_green, pin_purple, pin_yellow } from './Images.js';
 
 
 import {
@@ -17,6 +18,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 const HomeScreen = () => {
   const [desejos, setDesejos] = useState([]);
+  const { userId } = useContext(UsuarioContext);
 
   const apikey = '3a55eda8d68143a4a5116c1051638b0d';
   const shortenUrl = async (url) => {
@@ -45,7 +47,7 @@ const HomeScreen = () => {
 
   const fetchDesejos = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/desejos');
+      const response = await axios.get(`http://localhost:3001/desejos/${userId}`);
       const desejoData = response.data;
 
       setDesejos(desejoData);
@@ -56,7 +58,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     fetchDesejos();
-  }, []);
+  }, [userId]);
 
   const openModal = () => {
     Swal.fire({
@@ -102,7 +104,7 @@ const HomeScreen = () => {
           }
 
           const statusValue = status.value;
-          const usuario_id = 1;
+          const usuario_id = userId;
           const prioridade_id = 1;
 
           const response = await axios.post('http://localhost:3001/desejos', {
@@ -111,7 +113,7 @@ const HomeScreen = () => {
             status: statusValue,
             url: shortUrl,
             imagem: imagem,
-            usuario_id: usuario_id,
+            usuario_id,
             prioridade_id: prioridade_id,
           });
 
@@ -179,7 +181,7 @@ const HomeScreen = () => {
           status,
           url,
           imagem,
-          usuario_id: 1,
+          usuario_id: userId,
           prioridade_id: 1,
         };
 
@@ -214,19 +216,77 @@ const HomeScreen = () => {
     }
   };
 
-  useEffect(() => {
-    fetchDesejos();
-  }, [])
-
   const DesejoCard = ({ desejo }) => {
     const openEditModal = () => {
       EditDesejoModal({ desejo, fetchDesejos });
     };
-
+  
+    // Mapeamento de prioridade_id para cores
+    const priorityColorMap = {
+      1: 'red',
+      2: 'blue',
+      3: 'green',
+      4: 'purple',
+      5: 'yellow',
+    };
+  
+    // Determina a cor com base na prioridade_id
+    const priorityColor = priorityColorMap[desejo.prioridade_id];
+  
+    // Determina a imagem do pin com base na cor
+    let pinImage;
+    switch (priorityColor) {
+      case 'red':
+        pinImage = pin_red;
+        break;
+      case 'blue':
+        pinImage = pin_blue;
+        break;
+      case 'green':
+        pinImage = pin_green;
+        break;
+      case 'purple':
+        pinImage = pin_purple;
+        break;
+      case 'yellow':
+        pinImage = pin_yellow;
+        break;
+      default:
+        pinImage = pin_red; // Padrão para vermelho se a prioridade_id não estiver mapeada
+    }
+  
     return (
       <Draggable>
         <Card style={{ marginLeft: '35px', position: 'relative', marginBottom: '25px' }}>
           <CardActionArea style={{ position: 'relative' }}>
+            <img
+              src={pinImage}
+              alt="Pin"
+              style={{
+                position: 'absolute',
+                top: -5,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '50px',  // Ajuste o tamanho conforme necessário
+                height: 'auto', // Mantenha a proporção
+                zIndex: 3,
+              }}
+            />
+            {desejo.status === 'Reservado' && (
+              <img
+                src={reservedImage}
+                alt="Reservado"
+                style={{
+                  position: 'absolute',
+                  top: -5,
+                  left: 18,
+                  width: '95%',
+                  height: '95%',
+                  objectFit: 'cover',
+                  zIndex: 2,
+                }}
+              />
+            )}
             <CardContent style={{ position: 'relative', zIndex: 1 }}>
               <PolaroidBg>
                 {desejo.imagem && (
@@ -244,21 +304,6 @@ const HomeScreen = () => {
               </Typography>
               <Typography variant="body2">{desejo.descricao}</Typography>
             </CardContent>
-            {desejo.status === 'Reservado' && (
-              <img
-                src={reservedImage}
-                alt="Reservado"
-                style={{
-                  position: 'absolute',
-                  top: -5,
-                  left: 18,
-                  width: '95%',
-                  height: '95%',
-                  objectFit: 'cover',
-                  zIndex: 2,
-                }}
-              />
-            )}
           </CardActionArea>
         </Card>
       </Draggable>

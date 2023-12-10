@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import SharedSidebar from './SharedSidebar';
 import reservedImage from './homeImages/reservado3.png';
+import UsuarioContext from '../Contexts/Usuario.js';
 
 import {
   AppContainer, MainContainer, CardsContainer, BackgroundImage, PolaroidBg, FadeInImage
@@ -15,10 +16,11 @@ import { Card, CardActionArea, CardContent, Typography, } from '@mui/material';
 const HomeScreen = () => {
   const navigate = useNavigate();
   const [desejos, setDesejos] = useState([]);
-
+  const { userId } = useContext(UsuarioContext);
+  
   const fetchDesejos = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/desejos');
+      const response = await axios.get(`http://localhost:3001/desejos/${userId}`);
       const desejoData = response.data;
 
       setDesejos(desejoData);
@@ -29,6 +31,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     fetchDesejos();
+    // eslint-disable-next-line 
   }, []);
 
   const handleExitClick = () => {
