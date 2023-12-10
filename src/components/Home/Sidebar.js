@@ -200,7 +200,7 @@ const Sidebar = ({ logout }) => {
     <SidebarContainer>
       <Image src={images.polaroidImage} alt="Imagem" />
       <Button>Organizar</Button>
-      <p>{userNome}</p>
+      <p style={{fontSize: "18px", fontWeight: "bold"}}>👤 Olá, {userNome}</p>
       {prioridades.map((prioridade, index) => (
         <PriorityContainer key={index}>
           <ImagePins src={images[`pin_${corPorId[prioridade.id]}`]} alt="Imagem" style={{
