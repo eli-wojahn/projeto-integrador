@@ -98,6 +98,25 @@ const HomeScreen = () => {
           const status = document.querySelector('input[name="status"]:checked');
           const imagem = document.getElementById('swal-input5').value;
 
+          if (shortUrl.length > 100) {
+            Swal.fire('Por favor, selecione outra URL.', '', 'warning');
+            return;
+          }
+
+          if (imagem.length > 2000) {
+            Swal.fire('Por favor, selecione outra imagem.', '', 'warning');
+            return;
+          }
+
+          const prioridadeRadioButtons = document.getElementsByName('prioridade');
+          let prioridadeValue = 1;
+          for (const radioButton of prioridadeRadioButtons) {
+            if (radioButton.checked) {
+              prioridadeValue = parseInt(radioButton.value);
+              break;
+            }
+          }
+
           if (!name || !description || !status || !url || !imagem) {
             Swal.fire('Preencha todos os campos', '', 'warning');
             return;
@@ -105,7 +124,6 @@ const HomeScreen = () => {
 
           const statusValue = status.value;
           const usuario_id = userId;
-          const prioridade_id = 1;
 
           const response = await axios.post('http://localhost:3001/desejos', {
             nome: name,
@@ -114,7 +132,7 @@ const HomeScreen = () => {
             url: shortUrl,
             imagem: imagem,
             usuario_id,
-            prioridade_id: prioridade_id,
+            prioridade_id: prioridadeValue,
           });
 
           console.log(response.status)
@@ -145,6 +163,7 @@ const HomeScreen = () => {
   const EditDesejoModal = ({ desejo, fetchDesejos }) => {
     const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
     const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
+    const prioridadeValue = desejo.prioridade_id;
 
     Swal.fire({
       title: 'Editar Desejo',
@@ -159,6 +178,18 @@ const HomeScreen = () => {
           <input type="radio" id="radio-reservado" name="status" value="Reservado" ${statusReservadoChecked}>
           <label for="radio-reservado">Reservado</label>
         </div>
+        <div class="swal2-radio">
+          <input type="radio" id="radio-1" name="prioridade" value="${prioridadeValue === 1 ? 'checked' : ''}">
+          <label for="radio-1">1</label>
+          <input type="radio" id="radio-2" name="prioridade" value="${prioridadeValue === 2 ? 'checked' : ''}">
+          <label for="radio-2">2</label>
+          <input type="radio" id="radio-3" name="prioridade" value="${prioridadeValue === 3 ? 'checked' : ''}">
+          <label for="radio-3">3</label>
+          <input type="radio" id="radio-4" name="prioridade" value="${prioridadeValue === 4 ? 'checked' : ''}">
+          <label for="radio-4">4</label>
+          <input type="radio" id="radio-5" name="prioridade" value="${prioridadeValue === 5 ? 'checked' : ''}">
+          <label for="radio-5">5</label>
+        </div
       `,
       focusConfirm: false,
       showCancelButton: true,
@@ -174,6 +205,20 @@ const HomeScreen = () => {
         const url = document.getElementById('swal-edit-input4').value;
         const imagem = document.getElementById('swal-input5').value;
 
+        if (imagem.length > 2000) {
+          Swal.fire('A URL da imagem deve ter no máximo 2000 caracteres.', '', 'warning');
+          return;
+        }
+
+        const prioridadeRadioButtons = document.getElementsByName('prioridade');
+        let prioridadeValue;
+        for (const radioButton of prioridadeRadioButtons) {
+          if (radioButton.checked) {
+            prioridadeValue = parseInt(radioButton.value);
+            break;
+          }
+        }
+
         const updatedDesejo = {
           ...desejo,
           nome: name,
@@ -182,7 +227,7 @@ const HomeScreen = () => {
           url,
           imagem,
           usuario_id: userId,
-          prioridade_id: 1,
+          prioridade_id: prioridadeValue,
         };
 
         try {
@@ -220,7 +265,7 @@ const HomeScreen = () => {
     const openEditModal = () => {
       EditDesejoModal({ desejo, fetchDesejos });
     };
-  
+
     // Mapeamento de prioridade_id para cores
     const priorityColorMap = {
       1: 'red',
@@ -229,10 +274,10 @@ const HomeScreen = () => {
       4: 'purple',
       5: 'yellow',
     };
-  
+
     // Determina a cor com base na prioridade_id
     const priorityColor = priorityColorMap[desejo.prioridade_id];
-  
+
     // Determina a imagem do pin com base na cor
     let pinImage;
     switch (priorityColor) {
@@ -254,7 +299,7 @@ const HomeScreen = () => {
       default:
         pinImage = pin_red; // Padrão para vermelho se a prioridade_id não estiver mapeada
     }
-  
+
     return (
       <Draggable>
         <Card style={{ marginLeft: '35px', position: 'relative', marginBottom: '25px' }}>
