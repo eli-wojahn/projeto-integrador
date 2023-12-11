@@ -19,6 +19,11 @@ import AddIcon from '@mui/icons-material/Add';
 const HomeScreen = () => {
   const [desejos, setDesejos] = useState([]);
   const { userId } = useContext(UsuarioContext);
+  const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 });
+
+  const resetCardPosition = () => {
+    setCardPosition({ x: 0, y: 0 });
+  };
 
   const apikey = '3a55eda8d68143a4a5116c1051638b0d';
   const shortenUrl = async (url) => {
@@ -358,11 +363,16 @@ const HomeScreen = () => {
 
   return (
     <AppContainer>
-      <Sidebar openModal={openModal} />
+      <Sidebar openModal={openModal} resetCardPosition={resetCardPosition} />
       <MainContainer>
         <CardsContainer>
           {desejos.map((desejo) => (
-            <DesejoCard key={desejo.id} desejo={desejo} />
+            <Draggable
+              key={desejo.id}
+              defaultPosition={cardPosition}
+            >
+              <DesejoCard desejo={desejo} />
+            </Draggable>
           ))}
         </CardsContainer>
       </MainContainer>
