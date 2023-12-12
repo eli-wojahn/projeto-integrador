@@ -14,6 +14,7 @@ import {
 
 import { Card, CardActionArea, CardContent, Fab, Typography, } from '@mui/material';
 
+
 import AddIcon from '@mui/icons-material/Add';
 
 const HomeScreen = () => {
@@ -80,16 +81,17 @@ const HomeScreen = () => {
           <label for="radio-reservado">Reservado</label>
         </div>
         <div class="swal2-radio">
+          <h5>Prioridade:<h5/>
           <input type="radio" id="radio-1" name="prioridade" value="1">
-          <label for="radio-1">1</label>
+          <label for="radio-1">🔴</label>
           <input type="radio" id="radio-2" name="prioridade" value="2">
-          <label for="radio-2">2</label>
+          <label for="radio-2">🔵</label>
           <input type="radio" id="radio-3" name="prioridade" value="3">
-          <label for="radio-3">3</label>
+          <label for="radio-3">🟢</label><br><br>
           <input type="radio" id="radio-4" name="prioridade" value="4">
-          <label for="radio-4">4</label>
+          <label for="radio-4">🟣</label>
           <input type="radio" id="radio-5" name="prioridade" value="5">
-          <label for="radio-5">5</label>
+          <label for="radio-5">🟡</label>
         </div>
       `,
       focusConfirm: false,
@@ -169,7 +171,10 @@ const HomeScreen = () => {
     const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
     const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
     const prioridadeValue = desejo.prioridade_id;
-
+  
+    // Lógica para verificar a prioridade marcada
+    const statusPrioridade = (value) => (prioridadeValue === value ? 'checked' : '');
+  
     Swal.fire({
       title: 'Editar Desejo',
       html: `
@@ -184,17 +189,18 @@ const HomeScreen = () => {
           <label for="radio-reservado">Reservado</label>
         </div>
         <div class="swal2-radio">
-          <input type="radio" id="radio-1" name="prioridade" value="${prioridadeValue === 1 ? 'checked' : ''}">
-          <label for="radio-1">1</label>
-          <input type="radio" id="radio-2" name="prioridade" value="${prioridadeValue === 2 ? 'checked' : ''}">
-          <label for="radio-2">2</label>
-          <input type="radio" id="radio-3" name="prioridade" value="${prioridadeValue === 3 ? 'checked' : ''}">
-          <label for="radio-3">3</label>
-          <input type="radio" id="radio-4" name="prioridade" value="${prioridadeValue === 4 ? 'checked' : ''}">
-          <label for="radio-4">4</label>
-          <input type="radio" id="radio-5" name="prioridade" value="${prioridadeValue === 5 ? 'checked' : ''}">
-          <label for="radio-5">5</label>
-        </div
+        <h5>Prioridade:<h5/>
+          <input type="radio" id="radio-1" name="prioridade" value="1" ${statusPrioridade(1)}>
+          <label for="radio-1">🔴</label>
+          <input type="radio" id="radio-2" name="prioridade" value="2" ${statusPrioridade(2)}>
+          <label for="radio-2">🔵</label>
+          <input type="radio" id="radio-3" name="prioridade" value="3" ${statusPrioridade(3)}>
+          <label for="radio-3">🟢</label><br><br>
+          <input type="radio" id="radio-4" name="prioridade" value="4" ${statusPrioridade(4)}>
+          <label for="radio-4">🟣</label>
+          <input type="radio" id="radio-5" name="prioridade" value="5" ${statusPrioridade(5)}>
+          <label for="radio-5">🟡</label>
+        </div>
       `,
       focusConfirm: false,
       showCancelButton: true,
@@ -329,9 +335,9 @@ const HomeScreen = () => {
                 style={{
                   position: 'absolute',
                   top: -5,
-                  left: 18,
-                  width: '95%',
-                  height: '95%',
+                  left: 80,
+                  width: '65%',
+                  height: '65%',
                   objectFit: 'cover',
                   zIndex: 2,
                 }}
