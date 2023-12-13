@@ -170,10 +170,10 @@ const HomeScreen = () => {
     const statusDisponivelChecked = desejo.status === 'Disponível' ? 'checked' : '';
     const statusReservadoChecked = desejo.status === 'Reservado' ? 'checked' : '';
     const prioridadeValue = desejo.prioridade_id;
-  
+
     // Lógica para verificar a prioridade marcada
     const statusPrioridade = (value) => (prioridadeValue === value ? 'checked' : '');
-  
+
     Swal.fire({
       title: 'Editar Desejo',
       html: `
@@ -311,7 +311,7 @@ const HomeScreen = () => {
     }
 
     return (
-      <Draggable>
+      <Draggable >
         <Card style={{ marginLeft: '35px', position: 'relative', marginBottom: '25px' }}>
           <CardActionArea style={{ position: 'relative' }}>
             <img

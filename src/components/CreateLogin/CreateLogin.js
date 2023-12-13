@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import polaroidImage from '../Login/polaroid.png';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';  
+import axios from 'axios';
 import {
   LoginContainer,
   LoginHeader,
@@ -46,6 +46,26 @@ const CreateAccountScreen = () => {
     );
   };
 
+  // Função para validar a senha
+  const validatePassword = (password) => {
+    const messages = [];
+
+    if (password.length < 8) {
+      messages.push('A senha deve ter no mínimo, 8 caracteres.');
+    }
+
+    const maiusculas = /[A-Z]/;
+    const minusculas = /[a-z]/;
+    const numeros = /[0-9]/;
+    const caracteres = /[!@#$%^&*(),.?":{}|<>]/;
+
+    if (!maiusculas.test(password) || !minusculas.test(password) || !numeros.test(password) || !caracteres.test(password)) {
+      messages.push('A senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais.');
+    }
+
+    return messages;
+  };
+
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -76,6 +96,28 @@ const CreateAccountScreen = () => {
   const handleCreateAccountClick = async () => {
     if (!email || !password || !repeatPassword || !dataNasc || !fullName || !cpf) {
       Swal.fire('Erro', 'Preencha todos os campos.', 'error');
+      return;
+    }
+
+
+    // verificação de e-mail cadastrado
+    try {
+      const response = await axios.get(`http://localhost:3001/usuarios/${email}`);
+      console.log("Dados de email:", response.data)
+      if (response.data.length > 0) {
+        Swal.fire('Alerta', 'E-mail já cadastrado. Por favor, informe outro e-mail.', 'warning');
+        return;
+      }
+    } catch (error) {
+      console.error('Erro ao verificar e-mail:', error);
+      Swal.fire('Erro', 'Houve um erro ao criar a conta. Por favor, tente novamente.', 'error');
+      return;
+    }
+
+    // verificação de senha
+    const passwordValidation = validatePassword(password);
+    if (passwordValidation.length > 0) {
+      Swal.fire('Alerta', passwordValidation.join('\n'), 'warning');
       return;
     }
 
@@ -131,7 +173,7 @@ const CreateAccountScreen = () => {
                 placeholder="CPF"
                 value={cpf}
                 onChange={handleCPFChange}
-                maxLength={14} // Limita o número máximo de caracteres a 14 (com pontos e traço)
+                maxLength={14}
               />
             </FormControl>
             <FormControl>
@@ -140,7 +182,7 @@ const CreateAccountScreen = () => {
                 placeholder="Data de Nascimento"
                 value={dataNasc}
                 onChange={handleDataNascChange}
-                maxLength={10} // Limita o número máximo de caracteres a 10 (com pontos e traço)
+                maxLength={10}
               />
             </FormControl>
             <FormControl>
