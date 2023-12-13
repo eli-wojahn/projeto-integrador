@@ -14,7 +14,6 @@ import {
 
 import { Card, CardActionArea, CardContent, Fab, Typography, } from '@mui/material';
 
-
 import AddIcon from '@mui/icons-material/Add';
 
 const HomeScreen = () => {
@@ -81,18 +80,18 @@ const HomeScreen = () => {
           <label for="radio-reservado">Reservado</label>
         </div>
         <div class="swal2-radio">
-          <h5>Prioridade:<h5/>
-          <input type="radio" id="radio-1" name="prioridade" value="1">
-          <label for="radio-1">🔴</label>
-          <input type="radio" id="radio-2" name="prioridade" value="2">
-          <label for="radio-2">🔵</label>
-          <input type="radio" id="radio-3" name="prioridade" value="3">
-          <label for="radio-3">🟢</label><br><br>
-          <input type="radio" id="radio-4" name="prioridade" value="4">
-          <label for="radio-4">🟣</label>
-          <input type="radio" id="radio-5" name="prioridade" value="5">
-          <label for="radio-5">🟡</label>
-        </div>
+        <h5>Prioridade:</h5>
+        <input type="radio" id="radio-1" name="prioridade" value="1">
+        <label for="radio-1" style=" margin-left: -5px;"><img src=${pin_red} alt="Red Pin" style="width: 28px; height: 28px;" /></label>
+        <input type="radio" id="radio-2" name="prioridade" value="2">
+        <label for="radio-2" style=" margin-left: -5px;""><img src=${pin_blue} alt="Blue Pin" style="width: 28px; height: 28px;" /></label>
+        <input type="radio" id="radio-3" name="prioridade" value="3">
+        <label for="radio-3" style=" margin-left: -5px;""><img src=${pin_green} alt="Green Pin" style="width: 28px; height: 28px;" /></label>
+        <input type="radio" id="radio-4" name="prioridade" value="4">
+        <label for="radio-4" style=" margin-left: -5px;""><img src=${pin_purple} alt="Purple Pin" style="width: 28px; height: 28px;" /></label>
+        <input type="radio" id="radio-5" name="prioridade" value="5">
+        <label for="radio-5" style=" margin-left: -5px;""><img src=${pin_yellow} alt="Yellow Pin" style="width: 28px; height: 28px;" /></label>
+      </div>
       `,
       focusConfirm: false,
       preConfirm: async () => {
@@ -191,15 +190,15 @@ const HomeScreen = () => {
         <div class="swal2-radio">
         <h5>Prioridade:<h5/>
           <input type="radio" id="radio-1" name="prioridade" value="1" ${statusPrioridade(1)}>
-          <label for="radio-1">🔴</label>
+          <label for="radio-1" style=" margin-left: -5px;"><img src=${pin_red} alt="Red Pin" style="width: 28px; height: 28px;" /></label>
           <input type="radio" id="radio-2" name="prioridade" value="2" ${statusPrioridade(2)}>
-          <label for="radio-2">🔵</label>
+          <label for="radio-2" style=" margin-left: -5px;""><img src=${pin_blue} alt="Blue Pin" style="width: 28px; height: 28px;" /></label>
           <input type="radio" id="radio-3" name="prioridade" value="3" ${statusPrioridade(3)}>
-          <label for="radio-3">🟢</label><br><br>
+          <label for="radio-3" style=" margin-left: -5px;""><img src=${pin_green} alt="Green Pin" style="width: 28px; height: 28px;" /></label>
           <input type="radio" id="radio-4" name="prioridade" value="4" ${statusPrioridade(4)}>
-          <label for="radio-4">🟣</label>
+          <label for="radio-4" style=" margin-left: -5px;""><img src=${pin_purple} alt="Purple Pin" style="width: 28px; height: 28px;" /></label>
           <input type="radio" id="radio-5" name="prioridade" value="5" ${statusPrioridade(5)}>
-          <label for="radio-5">🟡</label>
+          <label for="radio-5" style=" margin-left: -5px;""><img src=${pin_yellow} alt="Yellow Pin" style="width: 28px; height: 28px;" /></label>
         </div>
       `,
       focusConfirm: false,
