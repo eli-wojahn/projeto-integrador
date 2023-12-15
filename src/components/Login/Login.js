@@ -9,14 +9,14 @@ import {
   ForgotPasswordLink, LoginButton, CreateAccountButton, Image, ImageContainer, RightContainer, Container, Column, Row
 } from './LoginStyle.js';
 import UsuarioContext from '../Contexts/Usuario.js';
+import { setCookie } from 'nookies'; 
 
 const LoginScreen = () => {
   const imageSrc = polaroidImage;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { mudaId, mudaNome } = useContext(UsuarioContext)
-
+  const { mudaId, mudaNome } = useContext(UsuarioContext);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -28,28 +28,32 @@ const LoginScreen = () => {
 
   async function verificaLogin() {
     const emailPattern = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$/;
-  
+
     if (!email.match(emailPattern)) {
       console.error('Invalid email');
       Swal.fire('Erro', 'Digite um e-mail válido', 'error');
       return;
     }
-  
+
     try {
       const userData = {
         email,
         senha: password
       };
-  
+
       const response = await axios.post('http://localhost:3001/login', userData);
-  
+
       if (response.status === 200 && response.data.msg === 'Usuário logado') {
         const { id, nome } = response.data;
-  
+
         mudaId(id);
         mudaNome(nome);
-        localStorage.setItem("cliente_logado", JSON.stringify({ id, nome }));
-  
+
+        setCookie(null, 'usuario_logado', JSON.stringify({ id, nome }), {
+          maxAge: 30 * 24 * 60 * 60,
+          path: '/',
+        });
+
         Swal.fire('Sucesso', 'Login realizado com sucesso', 'success');
         navigate('/home');
       } else {
@@ -57,7 +61,7 @@ const LoginScreen = () => {
       }
     } catch (error) {
       console.error('Erro ao realizar o login:', error);
-  
+
       if (error.response && error.response.status === 401) {
         Swal.fire('Erro', 'Usuário não cadastrado.', 'error');
       } else {
@@ -65,10 +69,6 @@ const LoginScreen = () => {
       }
     }
   }
-
-
-
-
 
   return (
     <Container>

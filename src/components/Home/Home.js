@@ -49,7 +49,6 @@ const HomeScreen = () => {
     }
   };
 
-
   const fetchDesejos = async () => {
     try {
       const response = await axios.get(`http://localhost:3001/desejos/${userId}`);
@@ -62,7 +61,7 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    fetchDesejos();
+    fetchDesejos(); 
   }, [userId]);
 
   const openModal = () => {
@@ -322,8 +321,8 @@ const HomeScreen = () => {
                 top: -5,
                 left: '50%',
                 transform: 'translateX(-50%)',
-                width: '50px',  // Ajuste o tamanho conforme necessário
-                height: 'auto', // Mantenha a proporção
+                width: '50px', 
+                height: 'auto', 
                 zIndex: 3,
               }}
             />

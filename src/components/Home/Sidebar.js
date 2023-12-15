@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import * as images from './Images';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import { parseCookies, setCookie, destroyCookie } from 'nookies';
 
 import {
   SidebarContainer,
@@ -67,29 +68,10 @@ const PriorityField = ({ id, initialValue }) => {
   );
 };
 
-const Sidebar = ({ logout, resetCardPosition }) => {
-  const { userNome, userId, mudaId, mudaNome } = useContext(UsuarioContext)
+const Sidebar = ({ resetCardPosition }) => {
+  const { userNome, userId, mudaId, mudaNome } = useContext(UsuarioContext);
   const [prioridades, setPrioridades] = useState([]);
   const navigate = useNavigate();
-
-  function logout() {
-    Swal.fire({
-      title: "Confirma saída da página?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sim!",
-      cancelButtonText: "Cancelar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        mudaId(null)
-        mudaNome("")
-        localStorage.removeItem("cliente_logado")
-        navigate('/');
-      }
-    });
-  }
 
   const fetchPrioridades = async () => {
     try {
@@ -159,8 +141,6 @@ const Sidebar = ({ logout, resetCardPosition }) => {
     });
   };
 
-
-
   const showShare2Modal = () => {
     Swal.fire({
       title: `
@@ -191,10 +171,24 @@ const Sidebar = ({ logout, resetCardPosition }) => {
     });
   };
 
-  /*   const organizar = () => {
-  
-      window.location.reload();
-    }; */
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Confirma saída da página?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim!",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mudaId("");
+        mudaNome("");
+        destroyCookie(null, 'usuario_logado', { path: '/' });
+        navigate('/');
+      }
+    });
+  };
 
   return (
     <SidebarContainer>
@@ -226,7 +220,7 @@ const Sidebar = ({ logout, resetCardPosition }) => {
           <IconButton>
             <ImageIcons
               src={images.exit}
-              onClick={logout}
+              onClick={handleLogout}  // Substituindo a função de logout
               alt="exit"
               style={{ width: '50px' }}
             />
