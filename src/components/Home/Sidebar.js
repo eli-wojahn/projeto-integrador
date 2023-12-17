@@ -153,21 +153,38 @@ const Sidebar = ({ resetCardPosition }) => {
       html: `
         <div>
           <div>
-            <a href="https://api.whatsapp.com/send?text=www.exemplo.com.br" target="_blank" rel="noopener noreferrer">
+            <a href="https://api.whatsapp.com/send?text=http://localhost:3000/minha-lista" target="_blank" rel="noopener noreferrer">
               <img src="https://www.unipile.com/wp-content/uploads/2022/02/xicone-logo-whatsapp-vert.png.pagespeed.ic.GpT05ETuy7.png" alt="WhatsApp" style="width: 30px; height: 30px; margin-right: 10px;" />
             </a>
-            <a href="https://www.instagram.com/?url=www.exemplo.com.br" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.instagram.com/?url=http://localhost:3000/minha-lista" target="_blank" rel="noopener noreferrer">
               <img src="https://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png" style="width: 30px; height: 30px; margin-right: 10px;" />
             </a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=www.exemplo.com.br" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:3000/minha-lista" target="_blank" rel="noopener noreferrer">
               <img src="https://static.vecteezy.com/system/resources/previews/018/930/476/non_2x/facebook-logo-facebook-icon-transparent-free-png.png" alt="Facebook" style="width: 30px; height: 30px; margin-right: 10px;" />
             </a>
-            <a href="mailto:?subject=Compartilhar%20Lista&body=www.exemplo.com.br" target="_blank" rel="noopener noreferrer">
+            <a href="mailto:?subject=Compartilhar%20Lista&body=http://localhost:3000/minha-lista" target="_blank" rel="noopener noreferrer">
               <img src="https://static.vecteezy.com/system/resources/previews/016/716/465/non_2x/gmail-icon-free-png.png" alt="Gmail" style="width: 30px; height: 30px;" />
             </a>
           </div>
         </div>
       `,
+    });
+  };
+
+  const ProfileModal = () => {
+    Swal.fire({
+      title: `
+        <div style="text-align: center;">
+        <div>
+        Perfil  
+      </div>
+          <img src="https://www.sulhosting.com/img/about-img.png" alt="Custom Image" style="  max-width: 100%; max-height: 100%; margin-bottom: 2px;" />
+          <div>
+          Página em construção 
+        </div>
+        </div>`,
+      showCloseButton: true,
+      showConfirmButton: false,
     });
   };
 
@@ -214,7 +231,7 @@ const Sidebar = ({ resetCardPosition }) => {
           </IconButton>
         </ButtonRow>
         <ButtonRow>
-          <IconButton>
+          <IconButton onClick={ProfileModal}>
             <ImageIcons src={images.avatar} alt="avatar" />
           </IconButton>
           <IconButton>

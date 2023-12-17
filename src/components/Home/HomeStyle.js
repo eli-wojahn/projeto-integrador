@@ -185,7 +185,7 @@ export const Description = styled.p`
 export const CardsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-top: 25px; /* Adicione espaço em cima */
+  margin-top: 25px;
 `;
 
 export const PolaroidBg = styled.div`

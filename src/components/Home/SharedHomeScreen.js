@@ -30,9 +30,8 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    fetchDesejos();
-    // eslint-disable-next-line 
-  }, []);
+    fetchDesejos(); 
+  }, [userId]);
 
   const handleExitClick = () => {
     navigate('/');

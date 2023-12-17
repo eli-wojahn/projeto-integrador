@@ -95,7 +95,7 @@ const SharedSidebar = ({ handleExitClick }) => {
     <SidebarContainer>
       <Image src={images.polaroidImage} alt="Imagem" />
       <h5 style={{marginTop: "25px"}}>Bem-vindo à lista de desejos de:</h5>
-      <p>{userNome}</p>
+      <p style={{ fontSize: "18px", fontWeight: "bold" }}>{userNome}</p>
       {prioridades.map((prioridade, index) => (
         <PriorityContainer key={index}>
           <ImagePins src={images[`pin_${corPorId[prioridade.id]}`]} alt="Imagem" />
@@ -107,17 +107,6 @@ const SharedSidebar = ({ handleExitClick }) => {
         <ButtonRow>
         </ButtonRow>
         <ButtonRow>
-          <IconButton>
-            <ImageIcons src={images.avatar} alt="avatar" />
-          </IconButton>
-          <IconButton>
-            <ImageIcons
-              src={images.exit}
-              onClick={handleExitClick}
-              alt="exit"
-              style={{ width: '50px' }}
-            />
-          </IconButton>
         </ButtonRow>
       </ButtonsContainer>
     </SidebarContainer>

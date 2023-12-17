@@ -141,8 +141,6 @@ const HomeScreen = () => {
           });
 
           console.log(response.status)
-          // console.log('Headers da resposta:', response.headers);
-          // console.log('Dados da resposta:', response.data);
 
           if (response.status === 200 || response.status === 201) {
             console.log('Desejo criado:', response.data);
@@ -306,11 +304,11 @@ const HomeScreen = () => {
         pinImage = pin_yellow;
         break;
       default:
-        pinImage = pin_red; // Padrão para vermelho se a prioridade_id não estiver mapeada
+        pinImage = pin_red; 
     }
 
     return (
-      <Draggable >
+      <Draggable>
         <Card style={{ marginLeft: '35px', position: 'relative', marginBottom: '25px' }}>
           <CardActionArea style={{ position: 'relative' }}>
             <img
@@ -368,10 +366,10 @@ const HomeScreen = () => {
   return (
     <AppContainer>
       <Sidebar openModal={openModal} resetCardPosition={resetCardPosition} />
-      <MainContainer>
-        <CardsContainer>
+      <MainContainer >
+        <CardsContainer >
           {desejos.map((desejo) => (
-            <Draggable
+            <Draggable  
               key={desejo.id}
               defaultPosition={cardPosition}
             >
